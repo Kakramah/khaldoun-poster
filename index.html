@@ -408,6 +408,41 @@
             border-bottom: 2px solid #e9edf2;
         }
 
+        /* ===== التبويبات ===== */
+        .tab-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 6;
+            padding: 6px 0 8px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 9px 4px;
+            border: 1px solid #e3e7ec;
+            border-radius: 9px;
+            background: #f4f6f8;
+            color: #5a6472;
+            font-weight: 800;
+            font-size: 12px;
+            font-family: 'Tajawal', sans-serif;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+        .tab-btn span { font-size: 17px; line-height: 1; }
+        .tab-btn:hover { border-color: #E07B2E; }
+        .tab-btn.active { background: #0B3D5C; color: #fff; border-color: #0B3D5C; }
+        /* إظهار قسم التبويب النشط فقط */
+        .section[data-tab] { display: none; }
+        .section[data-tab].tab-visible { display: block; }
+
         /* كتل تحكّم عناصر الهوية */
         .id-block {
             background: #fff;
@@ -737,6 +772,9 @@
                 padding: 12px;
             }
             .editor-panel { box-shadow: none; padding: 2px 0 10px; }
+            /* شريط التبويبات ثابت (غير ملتصق) على الجوال لتفادي تداخله مع شريط المعاينة */
+            .tab-bar { position: static; padding-top: 0; }
+            .tab-btn { padding: 11px 4px; font-size: 13px; }
             .section { padding: 14px 13px 4px; }
             /* 16px يمنع تكبير iOS التلقائي عند التركيز */
             .form-group input,
@@ -786,8 +824,15 @@
         <div class="editor-panel" id="editorPanel">
         <h3>📝 عدّل البوستر</h3>
 
+        <div class="tab-bar" id="tabBar">
+            <button type="button" class="tab-btn active" data-tab="content"><span>📝</span>محتوى</button>
+            <button type="button" class="tab-btn" data-tab="image"><span>🖼️</span>صورة</button>
+            <button type="button" class="tab-btn" data-tab="design"><span>🎨</span>تصميم</button>
+            <button type="button" class="tab-btn" data-tab="brand"><span>🪪</span>هوية</button>
+        </div>
+
         <!-- ===== المحتوى ===== -->
-        <div class="section">
+        <div class="section" data-tab="content">
             <div class="section-title">📝 المحتوى</div>
 
             <div class="form-group">
@@ -858,7 +903,7 @@
         </div>
 
         <!-- ===== الصورة ===== -->
-        <div class="section">
+        <div class="section" data-tab="image">
             <div class="section-title">🖼️ الصورة</div>
             <div class="form-group">
                 <label>رفع صورة من الجهاز</label>
@@ -887,7 +932,7 @@
         </div>
 
         <!-- ===== التصميم ===== -->
-        <div class="section">
+        <div class="section" data-tab="design">
             <div class="section-title">🎨 التصميم</div>
             <div class="form-group">
                 <label>الستايل والألوان</label>
@@ -931,7 +976,7 @@
         </div>
 
         <!-- ===== الهوية البصرية ===== -->
-        <div class="section">
+        <div class="section" data-tab="brand">
             <div class="section-title">🪪 الهوية البصرية</div>
 
             <div class="form-group">
@@ -1010,7 +1055,7 @@
         </div>
 
         <!-- ===== التوقيع ===== -->
-        <div class="section">
+        <div class="section" data-tab="brand">
             <div class="section-title">✍️ التوقيع</div>
             <div class="form-group">
                 <label class="slider-label"><span>حجم التوقيع</span><span class="val-badge" id="wmSizeVal">11px</span></label>
@@ -1471,6 +1516,24 @@
             // حفظ تلقائي عند أي تغيير في اللوحة + نقرات الثيم/الإعادة/الرفع
             $('editorPanel').addEventListener('input', saveState);
             $('editorPanel').addEventListener('change', saveState);
+
+            // ===== التبويبات: إظهار قسم واحد في كل مرة =====
+            function showTab(tab) {
+                document.querySelectorAll('.section[data-tab]').forEach(function (s) {
+                    s.classList.toggle('tab-visible', s.getAttribute('data-tab') === tab);
+                });
+                document.querySelectorAll('.tab-btn').forEach(function (b) {
+                    b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+                });
+                autoFitFooter();
+            }
+            document.querySelectorAll('.tab-btn').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    showTab(b.getAttribute('data-tab'));
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+            showTab('content');   // التبويب الافتراضي
 
             // استرجاع آخر حالة محفوظة
             try { applyState(JSON.parse(localStorage.getItem(LS_KEY))); } catch (e) {}
