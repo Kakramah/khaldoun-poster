@@ -65,6 +65,14 @@
             --title-font: 'Amiri', serif;
             --accent-font: 'Tajawal', sans-serif;
             --footer-font: 'Tajawal', sans-serif;
+            /* عناصر الهوية: حجم/موضع/شفافية */
+            --frame-inset: 13px;
+            --frame-opacity: 1;
+            --eyebrow-size: 11px;
+            --eyebrow-opacity: 1;
+            --eyebrow-justify: flex-start;
+            --mono-size: 44px;
+            --mono-opacity: 1;
 
             position: relative;
             width: 360px;
@@ -202,10 +210,11 @@
         /* إطار توقيعي + أقواس تسجيل (registration) */
         .poster-frame {
             position: absolute;
-            inset: 13px;
+            inset: var(--frame-inset, 13px);
             z-index: 5;
             pointer-events: none;
             display: none;
+            opacity: var(--frame-opacity, 1);
             border: 1px solid var(--accent-soft);
         }
         .poster-container.frame-on .poster-frame { display: block; }
@@ -229,32 +238,39 @@
             display: none;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
+            width: var(--mono-size, 44px);
+            height: var(--mono-size, 44px);
             border: 1.5px solid var(--accent-soft);
             border-radius: 50%;
             font-family: 'Amiri', serif;
             font-weight: 700;
-            font-size: 12px;
+            font-size: calc(var(--mono-size, 44px) * 0.30);
             line-height: 1;
             color: var(--accent);
             background: rgba(0, 0, 0, 0.12);
             text-shadow: var(--body-shadow);
             white-space: nowrap;
+            opacity: var(--mono-opacity, 1);
         }
         .poster-container.mono-on .monogram { display: flex; }
+        /* أركان المونوغرام */
+        .poster-container.mono-tr .monogram { top: 16px; right: 16px; left: auto; bottom: auto; }
+        .poster-container.mono-bl .monogram { bottom: 16px; left: 16px; top: auto; right: auto; }
+        .poster-container.mono-br .monogram { bottom: 16px; right: 16px; top: auto; left: auto; }
 
         /* شريط Eyebrow علوي */
         .eyebrow {
             display: none;
             align-items: center;
+            justify-content: var(--eyebrow-justify, flex-start);
             gap: 8px;
             font-family: 'Tajawal', sans-serif;
-            font-size: 11px;
+            font-size: var(--eyebrow-size, 11px);
             font-weight: 700;
             color: var(--accent);
             margin-bottom: 12px;
             text-shadow: var(--body-shadow);
+            opacity: var(--eyebrow-opacity, 1);
         }
         .eyebrow::before {
             content: '';
@@ -389,6 +405,21 @@
             gap: 8px;
             letter-spacing: .2px;
             border-bottom: 2px solid #e9edf2;
+        }
+
+        /* كتل تحكّم عناصر الهوية */
+        .id-block {
+            background: #fff;
+            border: 1px solid #e9edf2;
+            border-radius: 8px;
+            padding: 12px 12px 2px;
+            margin-bottom: 12px;
+        }
+        .id-block-title {
+            font-size: 12.5px;
+            font-weight: 800;
+            color: #B84A2C;
+            margin-bottom: 11px;
         }
 
         /* أزرار المقاس المرئية (segmented) */
@@ -901,21 +932,78 @@
         <!-- ===== الهوية البصرية ===== -->
         <div class="section">
             <div class="section-title">🪪 الهوية البصرية</div>
+
             <div class="form-group">
-                <label>شريط الإيبرو (Eyebrow) العلوي</label>
-                <input type="text" id="eyebrowInput" value="توثيق · جبلة" placeholder="مثال: توثيق · جبلة">
-            </div>
-            <div class="form-group">
-                <label>المونوغرام (ختم الزاوية)</label>
-                <input type="text" id="monoInput" value="𝓚.𝓐.𝓐" placeholder="مثال: 𝓚.𝓐.𝓐" maxlength="16">
-            </div>
-            <div class="form-group">
-                <label>عناصر الهوية</label>
+                <label>إظهار/إخفاء العناصر</label>
                 <div class="toggles">
                     <label class="chk"><input type="checkbox" id="tglGrain" checked> حُبيبات فيلمية (Grain)</label>
                     <label class="chk"><input type="checkbox" id="tglFrame" checked> الإطار وأقواس الزاوية</label>
                     <label class="chk"><input type="checkbox" id="tglEyebrow" checked> شريط الإيبرو العلوي</label>
                     <label class="chk"><input type="checkbox" id="tglMono" checked> المونوغرام (الختم)</label>
+                </div>
+            </div>
+
+            <!-- الإطار -->
+            <div class="id-block">
+                <div class="id-block-title">▭ الإطار وأقواس الزاوية</div>
+                <div class="form-group">
+                    <label class="slider-label"><span>الحجم (المسافة عن الحافة)</span><span class="size-badge" id="frameInsetVal">13px</span></label>
+                    <input type="range" id="frameInset" min="2" max="46" step="1" value="13">
+                </div>
+                <div class="form-group">
+                    <label class="slider-label"><span>الشفافية</span><span class="val-badge" id="frameOpacityVal">100%</span></label>
+                    <input type="range" id="frameOpacity" min="0" max="1" step="0.01" value="1">
+                </div>
+            </div>
+
+            <!-- الإيبرو -->
+            <div class="id-block">
+                <div class="id-block-title">▬ شريط الإيبرو العلوي</div>
+                <div class="form-group">
+                    <label>النص</label>
+                    <input type="text" id="eyebrowInput" value="توثيق · جبلة" placeholder="مثال: توثيق · جبلة">
+                    <div class="field-controls">
+                        <span class="size-badge" id="eyebrowSizeVal">11px</span>
+                        <input type="range" id="eyebrowSize" min="7" max="22" step="0.5" value="11">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="slider-label"><span>الشفافية</span><span class="val-badge" id="eyebrowOpacityVal">100%</span></label>
+                    <input type="range" id="eyebrowOpacity" min="0" max="1" step="0.01" value="1">
+                </div>
+                <div class="form-group">
+                    <label>الموضع</label>
+                    <div class="seg-row">
+                        <button type="button" class="seg active" data-ebpos="flex-start">يمين</button>
+                        <button type="button" class="seg" data-ebpos="center">وسط</button>
+                        <button type="button" class="seg" data-ebpos="flex-end">يسار</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- المونوغرام -->
+            <div class="id-block">
+                <div class="id-block-title">◯ المونوغرام (الختم)</div>
+                <div class="form-group">
+                    <label>النص</label>
+                    <input type="text" id="monoInput" value="𝓚.𝓐.𝓐" placeholder="مثال: 𝓚.𝓐.𝓐" maxlength="16">
+                    <div class="field-controls">
+                        <span class="size-badge" id="monoSizeVal">44px</span>
+                        <input type="range" id="monoSize" min="26" max="80" step="1" value="44">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="slider-label"><span>الشفافية</span><span class="val-badge" id="monoOpacityVal">100%</span></label>
+                    <input type="range" id="monoOpacity" min="0" max="1" step="0.01" value="1">
+                </div>
+                <div class="form-group">
+                    <label>الموضع (الركن)</label>
+                    <div class="seg-row">
+                        <button type="button" class="seg active" data-monopos="tl">↖</button>
+                        <button type="button" class="seg" data-monopos="tr">↗</button>
+                        <button type="button" class="seg" data-monopos="bl">↙</button>
+                        <button type="button" class="seg" data-monopos="br">↘</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1208,6 +1296,51 @@
                 $('monogram').textContent = this.value;
             });
 
+            // حجم/شفافية/موضع لكل عنصر هوية
+            function bindPx(sliderId, badgeId, cssVar, fit) {
+                $(sliderId).addEventListener('input', function () {
+                    poster.style.setProperty(cssVar, this.value + 'px');
+                    $(badgeId).textContent = this.value + 'px';
+                    if (fit) { autoFitFooter(); }
+                });
+            }
+            function bindOpacity(sliderId, badgeId, cssVar) {
+                $(sliderId).addEventListener('input', function () {
+                    poster.style.setProperty(cssVar, this.value);
+                    $(badgeId).textContent = Math.round(this.value * 100) + '%';
+                });
+            }
+            bindPx('frameInset',  'frameInsetVal',  '--frame-inset');
+            bindOpacity('frameOpacity', 'frameOpacityVal', '--frame-opacity');
+            bindPx('eyebrowSize', 'eyebrowSizeVal', '--eyebrow-size', true);
+            bindOpacity('eyebrowOpacity', 'eyebrowOpacityVal', '--eyebrow-opacity');
+            bindPx('monoSize',    'monoSizeVal',    '--mono-size');
+            bindOpacity('monoOpacity', 'monoOpacityVal', '--mono-opacity');
+
+            // موضع الإيبرو
+            function setEbPos(pos) {
+                document.querySelectorAll('.seg[data-ebpos]').forEach(function (b) {
+                    b.classList.toggle('active', b.getAttribute('data-ebpos') === pos);
+                });
+                poster.style.setProperty('--eyebrow-justify', pos);
+            }
+            document.querySelectorAll('.seg[data-ebpos]').forEach(function (b) {
+                b.addEventListener('click', function () { setEbPos(b.getAttribute('data-ebpos')); saveState(); });
+            });
+
+            // موضع المونوغرام (الركن)
+            var MONO_POS_CLASSES = ['mono-tr', 'mono-bl', 'mono-br'];
+            function setMonoPos(pos) {
+                MONO_POS_CLASSES.forEach(function (c) { poster.classList.remove(c); });
+                if (pos !== 'tl') { poster.classList.add('mono-' + pos); }
+                document.querySelectorAll('.seg[data-monopos]').forEach(function (b) {
+                    b.classList.toggle('active', b.getAttribute('data-monopos') === pos);
+                });
+            }
+            document.querySelectorAll('.seg[data-monopos]').forEach(function (b) {
+                b.addEventListener('click', function () { setMonoPos(b.getAttribute('data-monopos')); saveState(); });
+            });
+
             // ====== الحفظ التلقائي (localStorage) ======
             var LS_KEY = 'khaldoun-poster-v1';
             function collectState() {
@@ -1240,7 +1373,15 @@
                     grain: $('tglGrain').checked,
                     frame: $('tglFrame').checked,
                     eyebrow: $('tglEyebrow').checked,
-                    mono: $('tglMono').checked
+                    mono: $('tglMono').checked,
+                    frameInset: $('frameInset').value,
+                    frameOpacity: $('frameOpacity').value,
+                    eyebrowSize: $('eyebrowSize').value,
+                    eyebrowOpacity: $('eyebrowOpacity').value,
+                    ebPos: poster.style.getPropertyValue('--eyebrow-justify') || 'flex-start',
+                    monoSize: $('monoSize').value,
+                    monoOpacity: $('monoOpacity').value,
+                    monoPos: poster.classList.contains('mono-tr') ? 'tr' : poster.classList.contains('mono-bl') ? 'bl' : poster.classList.contains('mono-br') ? 'br' : 'tl'
                 };
             }
             var _t;
@@ -1295,6 +1436,14 @@
                 setChk('tglFrame', s.frame);
                 setChk('tglEyebrow', s.eyebrow);
                 setChk('tglMono', s.mono);
+                setRange('frameInset', s.frameInset);
+                setRange('frameOpacity', s.frameOpacity);
+                setRange('eyebrowSize', s.eyebrowSize);
+                setRange('eyebrowOpacity', s.eyebrowOpacity);
+                setRange('monoSize', s.monoSize);
+                setRange('monoOpacity', s.monoOpacity);
+                if (s.ebPos) { setEbPos(s.ebPos); }
+                if (s.monoPos) { setMonoPos(s.monoPos); }
             }
 
             // ربط الأزرار والإدخال بعد تحميل الصفحة (يعمل داخل Artifacts في Claude)
