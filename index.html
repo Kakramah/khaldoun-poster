@@ -443,6 +443,32 @@
         .section[data-tab] { display: none; }
         .section[data-tab].tab-visible { display: block; }
 
+        /* ===== مُحدِّد العنصر (Inspector) ===== */
+        .el-selector {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .el-chip {
+            flex: 1 1 auto;
+            padding: 9px 6px;
+            border: 1px solid #d8dde3;
+            border-radius: 8px;
+            background: #fff;
+            color: #5a6472;
+            font-weight: 700;
+            font-size: 12px;
+            font-family: 'Tajawal', sans-serif;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+        .el-chip:hover { border-color: #E07B2E; }
+        .el-chip.active { background: #E07B2E; color: #fff; border-color: #E07B2E; }
+        /* يظهر تحكّم العنصر المختار فقط */
+        .id-block[data-el] { display: none; }
+        .id-block[data-el].el-visible { display: block; }
+
         /* كتل تحكّم عناصر الهوية */
         .id-block {
             background: #fff;
@@ -989,8 +1015,18 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label>اضبط عنصراً (اختر ليظهر تحكّمه)</label>
+                <div class="el-selector" id="elSelector">
+                    <button type="button" class="el-chip active" data-el="frame">▭ الإطار</button>
+                    <button type="button" class="el-chip" data-el="eyebrow">▬ الإيبرو</button>
+                    <button type="button" class="el-chip" data-el="mono">◯ الختم</button>
+                    <button type="button" class="el-chip" data-el="watermark">✍️ التوقيع</button>
+                </div>
+            </div>
+
             <!-- الإطار -->
-            <div class="id-block">
+            <div class="id-block" data-el="frame">
                 <div class="id-block-title">▭ الإطار وأقواس الزاوية</div>
                 <div class="form-group">
                     <label class="slider-label"><span>الحجم (المسافة عن الحافة)</span><span class="size-badge" id="frameInsetVal">13px</span></label>
@@ -1003,7 +1039,7 @@
             </div>
 
             <!-- الإيبرو -->
-            <div class="id-block">
+            <div class="id-block" data-el="eyebrow">
                 <div class="id-block-title">▬ شريط الإيبرو العلوي</div>
                 <div class="form-group">
                     <label>النص</label>
@@ -1028,7 +1064,7 @@
             </div>
 
             <!-- المونوغرام -->
-            <div class="id-block">
+            <div class="id-block" data-el="mono">
                 <div class="id-block-title">◯ المونوغرام (الختم)</div>
                 <div class="form-group">
                     <label>النص</label>
@@ -1052,26 +1088,26 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- ===== التوقيع ===== -->
-        <div class="section" data-tab="brand">
-            <div class="section-title">✍️ التوقيع</div>
-            <div class="form-group">
-                <label class="slider-label"><span>حجم التوقيع</span><span class="val-badge" id="wmSizeVal">11px</span></label>
-                <input type="range" id="wmSize" min="7" max="22" step="0.5" value="11">
-            </div>
-            <div class="form-group">
-                <label>موضع التوقيع</label>
-                <div class="seg-row">
-                    <button type="button" class="seg active" data-align="right">يمين</button>
-                    <button type="button" class="seg" data-align="center">وسط</button>
-                    <button type="button" class="seg" data-align="left">يسار</button>
+            <!-- التوقيع -->
+            <div class="id-block" data-el="watermark">
+                <div class="id-block-title">✍️ التوقيع</div>
+                <div class="form-group">
+                    <label class="slider-label"><span>حجم التوقيع</span><span class="val-badge" id="wmSizeVal">11px</span></label>
+                    <input type="range" id="wmSize" min="7" max="22" step="0.5" value="11">
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="slider-label"><span>الموضع الرأسي (رفع من الأسفل)</span><span class="size-badge" id="wmBottomVal">9px</span></label>
-                <input type="range" id="wmBottom" min="0" max="150" step="1" value="9">
+                <div class="form-group">
+                    <label>موضع التوقيع</label>
+                    <div class="seg-row">
+                        <button type="button" class="seg active" data-align="right">يمين</button>
+                        <button type="button" class="seg" data-align="center">وسط</button>
+                        <button type="button" class="seg" data-align="left">يسار</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="slider-label"><span>الموضع الرأسي (رفع من الأسفل)</span><span class="size-badge" id="wmBottomVal">9px</span></label>
+                    <input type="range" id="wmBottom" min="0" max="150" step="1" value="9">
+                </div>
             </div>
         </div>
 
@@ -1534,6 +1570,20 @@
                 });
             });
             showTab('content');   // التبويب الافتراضي
+
+            // ===== مُحدِّد العنصر (Inspector): إظهار تحكّم عنصر واحد =====
+            function showEl(el) {
+                document.querySelectorAll('.id-block[data-el]').forEach(function (b) {
+                    b.classList.toggle('el-visible', b.getAttribute('data-el') === el);
+                });
+                document.querySelectorAll('.el-chip').forEach(function (c) {
+                    c.classList.toggle('active', c.getAttribute('data-el') === el);
+                });
+            }
+            document.querySelectorAll('.el-chip').forEach(function (c) {
+                c.addEventListener('click', function () { showEl(c.getAttribute('data-el')); });
+            });
+            showEl('frame');   // العنصر الافتراضي
 
             // استرجاع آخر حالة محفوظة
             try { applyState(JSON.parse(localStorage.getItem(LS_KEY))); } catch (e) {}
