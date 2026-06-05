@@ -54,6 +54,7 @@
             --img-opacity: 0.35;          /* شفافية صورة الخلفية — يضبطها السلايدر */
             --wm-size: 11px;              /* حجم التوقيع — يضبطه السلايدر */
             --wm-align: right;            /* موضع التوقيع: right / center / left */
+            --wm-bottom: 9px;            /* الموضع الرأسي للتوقيع (الرفع من الأسفل) */
             --text-body: #f4efe6;         /* لون النص التفصيلي (قابل للتبديل للثيم الفاتح) */
             --title-shadow: 0 2px 12px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.9);
             --body-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
@@ -363,7 +364,7 @@
         /* Watermark */
         .watermark {
             position: absolute;
-            bottom: 9px;
+            bottom: var(--wm-bottom, 9px);
             left: 20px;
             right: 20px;
             font-size: var(--wm-size, 11px);
@@ -1023,6 +1024,10 @@
                     <button type="button" class="seg" data-align="left">يسار</button>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="slider-label"><span>الموضع الرأسي (رفع من الأسفل)</span><span class="size-badge" id="wmBottomVal">9px</span></label>
+                <input type="range" id="wmBottom" min="0" max="150" step="1" value="9">
+            </div>
         </div>
 
         <div class="btn-row">
@@ -1234,6 +1239,13 @@
                 autoFitFooter();   // تكبير التوقيع قد يقلّل مساحة النص
             });
 
+            // الموضع الرأسي للتوقيع
+            $('wmBottom').addEventListener('input', function () {
+                poster.style.setProperty('--wm-bottom', this.value + 'px');
+                $('wmBottomVal').textContent = this.value + 'px';
+                autoFitFooter();
+            });
+
             // موضع التوقيع (يمين / وسط / يسار)
             function setActiveAlign(align) {
                 document.querySelectorAll('.seg[data-align]').forEach(function (b) {
@@ -1359,6 +1371,7 @@
                     size: $('sizeSelect').value,
                     wmSize: $('wmSize').value,
                     wmAlign: poster.style.getPropertyValue('--wm-align') || 'right',
+                    wmBottom: $('wmBottom').value,
                     titleSize: $('titleMainSize').value,
                     accentSize: $('titleAccentSize').value,
                     footerSize: $('footerSize').value,
@@ -1415,6 +1428,7 @@
                     setActiveSeg(s.size);
                 }
                 setRange('wmSize', s.wmSize);
+                setRange('wmBottom', s.wmBottom);
                 if (s.wmAlign) {
                     poster.style.setProperty('--wm-align', s.wmAlign);
                     setActiveAlign(s.wmAlign);
