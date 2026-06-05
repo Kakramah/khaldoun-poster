@@ -235,16 +235,18 @@
             display: none;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
+            width: 44px;
+            height: 44px;
             border: 1.5px solid var(--accent-soft);
             border-radius: 50%;
             font-family: 'Amiri', serif;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 12px;
+            line-height: 1;
             color: var(--accent);
             background: rgba(0, 0, 0, 0.12);
             text-shadow: var(--body-shadow);
+            white-space: nowrap;
         }
         .poster-container.mono-on .monogram { display: flex; }
 
@@ -679,7 +681,7 @@
         <div class="poster-scrim"></div>
         <div class="poster-grain"></div>
         <div class="poster-frame"></div>
-        <div class="monogram" id="monogram">خ ع</div>
+        <div class="monogram" id="monogram">𝓚.𝓐.𝓐</div>
         <div class="poster-content">
 
             <div class="title-section">
@@ -858,7 +860,7 @@
             </div>
             <div class="form-group">
                 <label>المونوغرام (ختم الزاوية)</label>
-                <input type="text" id="monoInput" value="خ ع" placeholder="مثال: خ ع" maxlength="5">
+                <input type="text" id="monoInput" value="𝓚.𝓐.𝓐" placeholder="مثال: 𝓚.𝓐.𝓐" maxlength="16">
             </div>
             <div class="form-group">
                 <label>عناصر الهوية</label>
