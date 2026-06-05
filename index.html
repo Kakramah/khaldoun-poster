@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خلدون - بوستر ثوري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;700;800&family=Cairo:wght@400;700;900&family=Reem+Kufi:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=El+Messiri:wght@400;700&family=Markazi+Text:wght@400;700&family=Lalezar&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* ===== تخطيط الاستوديو: معاينة ملتصقة + لوحة تحكم بجانبها ===== */
+        .studio {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: flex-start;
+            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .poster-col {
+            position: sticky;
+            top: 16px;
+            align-self: flex-start;
+            flex: 0 0 auto;
+        }
+        .editor-col {
+            flex: 1 1 360px;
+            min-width: 300px;
+            max-width: 440px;
+        }
+
+        @media (max-width: 760px) {
+            .poster-col { position: sticky; top: 6px; z-index: 50; align-self: center; }
+            .poster-container { width: 168px; }
+            .studio { gap: 14px; }
+        }
+
+        .poster-container {
+            /* === باليت جبلة المتوسطي (الافتراضي) — من نظام Khaldoun Akramah === */
+            --poster-bg: linear-gradient(160deg, #062538 0%, #0B3D5C 55%, #0F2A44 100%);
+            --accent: #E07B2E;            /* citrus — اللون الأساسي */
+            --accent-soft: rgba(224, 123, 46, 0.45);
+            --title-color: #F4EFE6;       /* sand */
+            --texture: radial-gradient(circle at 20% 50%, rgba(224, 123, 46, 0.05) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 80%, rgba(201, 165, 87, 0.06) 0%, transparent 50%);
+            --border-col: #0F2A44;
+            --img-opacity: 0.35;          /* شفافية صورة الخلفية — يضبطها السلايدر */
+            --wm-size: 11px;              /* حجم التوقيع — يضبطه السلايدر */
+            --wm-align: right;            /* موضع التوقيع: right / center / left */
+            --text-body: #f4efe6;         /* لون النص التفصيلي (قابل للتبديل للثيم الفاتح) */
+            --title-shadow: 0 2px 12px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.9);
+            --body-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+            --scrim-grad: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.6) 28%, rgba(0,0,0,0.25) 60%, transparent 100%);
+            /* أحجام وخطوط النصوص — يضبطها المستخدم */
+            --title-size: 32px;
+            --accent-size: 28px;
+            --footer-size: 13.5px;
+            --title-font: 'Amiri', serif;
+            --accent-font: 'Tajawal', sans-serif;
+            --footer-font: 'Tajawal', sans-serif;
+
+            position: relative;
+            width: 360px;
+            aspect-ratio: 9/16;
+            background: var(--poster-bg);
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-col);
+        }
+
+        /* === Tie Dye جبلة — مزيج من أكسنتات باليت جبلة الأصلية === */
+        .poster-container.theme-tiedye {
+            --poster-bg: linear-gradient(135deg, #0B3D5C 0%, #6B7A3A 22%, #C9A557 44%, #E07B2E 62%, #B84A2C 82%, #062538 100%);
+            --accent: #C9A557;            /* gold */
+            --accent-soft: rgba(201, 165, 87, 0.55);
+            --title-color: #FAF7F2;
+            --texture: radial-gradient(circle at 25% 20%, rgba(244, 239, 230, 0.12) 0%, transparent 45%),
+                       radial-gradient(circle at 80% 70%, rgba(107, 122, 58, 0.2) 0%, transparent 50%),
+                       radial-gradient(circle at 50% 95%, rgba(224, 123, 46, 0.22) 0%, transparent 55%);
+            --border-col: #E07B2E;
+        }
+
+        /* === سوريا الجديدة — الباليت الوطني الرسمي (الكهرماني خيط أفق فقط) === */
+        .poster-container.theme-syria {
+            --poster-bg: linear-gradient(165deg, #0c302e 0%, #114845 52%, #3E4C5A 100%);
+            --accent: #E8A04E;            /* amber thread — للأفق والخيوط فقط */
+            --accent-soft: rgba(232, 160, 78, 0.5);
+            --title-color: #FFFFFF;
+            --texture: radial-gradient(circle at 20% 30%, rgba(161, 184, 166, 0.18) 0%, transparent 50%),
+                       radial-gradient(circle at 85% 85%, rgba(232, 160, 78, 0.1) 0%, transparent 50%);
+            --border-col: #114845;
+        }
+
+        /* === وثائقي (Documentary) — فحمي سينمائي + ذهبي === */
+        .poster-container.theme-documentary {
+            --poster-bg: linear-gradient(160deg, #0a0a0a 0%, #1a1a1a 58%, #0a0a0a 100%);
+            --accent: #C6A87C;            /* gold — اللون الأساسي */
+            --accent-soft: rgba(198, 168, 124, 0.5);
+            --title-color: #E5E5E5;       /* أبيض دافئ — never pure white */
+            --text-body: #D4C5A9;         /* بيج الأرشيف */
+            --texture: radial-gradient(circle at 25% 25%, rgba(198, 168, 124, 0.07) 0%, transparent 50%),
+                       radial-gradient(circle at 80% 80%, rgba(139, 105, 20, 0.06) 0%, transparent 50%);
+            --border-col: #1a1a1a;
+        }
+
+        /* === متوسطي ورقي (Mediterranean) — كريمي فاتح + سيتروس === */
+        .poster-container.theme-medpaper {
+            --poster-bg: linear-gradient(165deg, #FAF7F2 0%, #EFE5D2 100%);
+            --accent: #B84A2C;            /* terracotta — تباين أعلى على الكريمي */
+            --accent-soft: rgba(184, 74, 44, 0.55);
+            --title-color: #0F2A44;       /* navy ink */
+            --text-body: #1A1A1A;         /* ink */
+            --texture: radial-gradient(circle at 20% 30%, rgba(107, 122, 58, 0.10) 0%, transparent 50%),
+                       radial-gradient(circle at 85% 80%, rgba(201, 165, 87, 0.12) 0%, transparent 50%);
+            --border-col: #C9A557;
+            /* ثيم فاتح: نص داكن + ظل خفيف + تعتيم فاتح بدل الأسود */
+            --title-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+            --body-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+            --scrim-grad: linear-gradient(to top, rgba(250,247,242,0.92) 0%, rgba(250,247,242,0.6) 32%, transparent 100%);
+        }
+
+        /* === المقاسات / الصيغ — الافتراضي 9:16 (ستوري/ريل) === */
+        .poster-container.fmt-4-5  { aspect-ratio: 4 / 5; }
+        .poster-container.fmt-1-1  { aspect-ratio: 1 / 1; }
+        .poster-container.fmt-16-9 { aspect-ratio: 16 / 9; }
+
+        /* تكييف الطباعة للمقاس العريض القصير 16:9 حتى لا يزدحم المحتوى */
+        .poster-container.fmt-16-9 {            /* أحجام افتراضية أصغر للمقاس العريض (يتجاوزها المستخدم) */
+            --title-size: 23px;
+            --accent-size: 19px;
+            --footer-size: 12px;
+        }
+        .poster-container.fmt-16-9 .poster-content { padding: 14px 22px 30px; }
+        .poster-container.fmt-16-9 .title-section  { margin-bottom: 8px; }
+        .poster-container.fmt-16-9 .title-main     { margin-bottom: 6px; }
+        .poster-container.fmt-16-9 .title-accent   { margin-bottom: 5px; }
+        .poster-container.fmt-16-9 .footer-section { padding-top: 8px; }
+        .poster-container.fmt-16-9 .footer-text    { line-height: 1.45; }
+
+        /* Background texture */
+        .poster-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--texture);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* صورة الخلفية الكاملة 9:16 — شفافة، فوق تدرّج الثيم وتحت النص */
+        .poster-bg-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 50% 50%;   /* يضبطه سلايدر الموضع */
+            opacity: var(--img-opacity);
+            filter: brightness(1.02) contrast(1.05);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* تعتيم سفلي ذكي — يضمن قراءة النص فوق أي صورة بلا صندوق */
+        .poster-scrim {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 60%;
+            background: var(--scrim-grad);
+            z-index: 1;
+            pointer-events: none;
+            opacity: var(--scrim-opacity, 1);
+        }
+
+        .poster-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px 34px;   /* أسفل: شريط محجوز للتوقيع خارج صندوق المحتوى */
+        }
+
+        /* Title Section */
+        .title-section {
+            flex-grow: 0;
+            margin-bottom: 25px;
+        }
+
+        .title-main {
+            font-family: var(--title-font);
+            font-size: var(--title-size);
+            font-weight: bold;
+            color: var(--title-color);
+            line-height: 1.3;
+            margin-bottom: 12px;
+            text-shadow: var(--title-shadow);
+        }
+
+        .title-accent {
+            font-size: var(--accent-size);
+            color: var(--accent);
+            font-weight: bold;
+            font-family: var(--accent-font);
+            margin-bottom: 8px;
+            text-shadow: var(--body-shadow);
+        }
+
+        .title-divider {
+            height: 2px;
+            width: 80px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            margin-bottom: 12px;
+        }
+
+        /* Footer Text Section — نص يطفو مباشرة فوق الصورة (بلا صندوق) */
+        .footer-section {
+            flex-grow: 0;
+            padding-top: 12px;
+            border-top: 2px solid var(--accent);
+            margin-top: auto;       /* شريط التوقيع محجوز عبر padding-bottom للمحتوى */
+        }
+
+        .footer-text {
+            font-size: var(--footer-size);
+            color: var(--text-body);
+            line-height: 1.65;
+            font-weight: 500;
+            text-align: right;
+            font-family: var(--footer-font);
+            text-shadow: var(--body-shadow);
+        }
+
+        /* النجوم الثلاث — تُظهر/تُخفى عبر مفتاح (مستقلة عن الثيم) */
+        .syria-stars {
+            display: none;
+            gap: 8px;
+            margin-bottom: 14px;
+            font-size: 18px;
+            color: var(--accent);
+            letter-spacing: 4px;
+        }
+        .poster-container.show-stars .syria-stars {
+            display: flex;
+        }
+
+        /* إخفاء الخطوط الفاصلة (اختياري) */
+        .poster-container.hide-title-divider .title-divider { display: none; }
+        .poster-container.hide-footer-divider .footer-section {
+            border-top: 0;
+            padding-top: 0;
+        }
+
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            bottom: 9px;
+            left: 20px;
+            right: 20px;
+            font-size: var(--wm-size, 11px);
+            text-align: var(--wm-align, right);
+            color: var(--accent-soft);
+            font-family: 'Amiri', serif;
+            z-index: 10;
+            font-weight: bold;
+            line-height: 1;
+            pointer-events: none;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+        }
+
+        /* Editor Panel */
+        .editor-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        /* أقسام اللوحة — بطاقات احترافية */
+        .section {
+            background: #f7f8fa;
+            border: 1px solid #edf0f4;
+            border-radius: 12px;
+            padding: 15px 16px 4px;
+            margin-bottom: 14px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #0B3D5C;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: .2px;
+            border-bottom: 2px solid #e9edf2;
+        }
+
+        /* أزرار المقاس المرئية (segmented) */
+        .seg-row { display: flex; gap: 6px; }
+        .seg {
+            flex: 1;
+            padding: 9px 4px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            background: #fff;
+            color: #555;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+            line-height: 1.25;
+            font-family: 'Tajawal', sans-serif;
+            transition: all .15s;
+        }
+        .seg small { display: block; font-size: 9px; font-weight: 500; color: #999; margin-top: 1px; }
+        .seg:hover { border-color: #E07B2E; background: #fff7f0; }
+        .seg.active { background: #0B3D5C; color: #fff; border-color: #0B3D5C; }
+        .seg.active small { color: rgba(255, 255, 255, .7); }
+
+        /* سلايدرات أكبر + فقاعة قيمة */
+        .slider-label { display: flex; justify-content: space-between; align-items: center; }
+        .val-badge {
+            background: #E07B2E;
+            color: #fff;
+            font-weight: 800;
+            font-size: 11px;
+            padding: 2px 9px;
+            border-radius: 20px;
+            min-width: 44px;
+            text-align: center;
+        }
+        .form-group input[type="range"] {
+            width: 100%;
+            height: 24px;
+            padding: 0;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+        }
+        .form-group input[type="range"]::-webkit-slider-runnable-track {
+            height: 6px; border-radius: 6px; background: #e3e3e3;
+        }
+        .form-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; margin-top: -7px;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: #E07B2E; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .35);
+        }
+        .form-group input[type="range"]::-moz-range-track { height: 6px; border-radius: 6px; background: #e3e3e3; }
+        .form-group input[type="range"]::-moz-range-thumb {
+            width: 18px; height: 18px; border-radius: 50%;
+            background: #E07B2E; border: 2px solid #fff;
+        }
+
+        /* صف الأزرار — ثابت أسفل اللوحة */
+        .btn-row {
+            position: sticky;
+            bottom: 0;
+            background: #fff;
+            padding-top: 14px;
+            margin-top: 18px;
+            border-top: 1px solid #eee;
+        }
+        .btn-row button { flex: 1; padding: 12px; }
+
+        /* أدوات الحقل: خط + حجم */
+        .field-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .field-controls .font-sel {
+            flex: 1 1 50%;
+            padding: 7px 8px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .field-controls input[type="range"] { flex: 1 1 45%; height: 24px; }
+        .size-badge {
+            background: #0B3D5C;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 20px;
+            min-width: 40px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* مفاتيح إظهار/إخفاء */
+        .toggles { display: flex; flex-direction: column; gap: 10px; }
+        .form-group label.chk {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            margin: 0;
+        }
+        .form-group label.chk input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #E07B2E;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .editor-panel h3 {
+            color: #0B3D5C;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            color: #3a4250;
+            margin-bottom: 7px;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 11px;
+            border: 1px solid #d8dde3;
+            border-radius: 7px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 13px;
+            background: #fff;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus,
+        .field-controls .font-sel:focus {
+            outline: none;
+            border-color: #E07B2E;
+            box-shadow: 0 0 0 3px rgba(224, 123, 46, 0.14);
+        }
+
+        .theme-swatches {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .swatch {
+            flex: 1;
+            height: 34px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+
+        .swatch:hover { transform: translateY(-2px); }
+        .swatch.active { border-color: #0B3D5C; }
+
+        .accent-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .accent-row input[type="color"] {
+            width: 48px;
+            height: 38px;
+            padding: 2px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            background: #f0f0f0;
+            color: #555;
+            font-size: 12px;
+            padding: 8px 12px;
+        }
+
+        .btn-reset:hover { background: #e2e2e2; }
+
+        .form-group input[type="range"] {
+            width: 100%;
+            padding: 0;
+            accent-color: #E07B2E;
+            cursor: pointer;
+        }
+
+        .form-group input[type="file"] {
+            padding: 6px 8px;
+            font-size: 12px;
+        }
+
+        #opacityVal {
+            color: #E07B2E;
+            font-weight: 700;
+        }
+
+        .swatch[data-theme="theme-jableh"] {
+            background: linear-gradient(135deg, #062538, #0B3D5C);
+            box-shadow: inset 0 0 0 2px #E07B2E;
+        }
+        .swatch[data-theme="theme-tiedye"] {
+            background: linear-gradient(135deg, #0B3D5C, #6B7A3A, #C9A557, #E07B2E, #B84A2C);
+        }
+        .swatch[data-theme="theme-syria"] {
+            background: linear-gradient(135deg, #114845, #3E4C5A);
+            box-shadow: inset 0 0 0 2px #E8A04E;
+        }
+        .swatch[data-theme="theme-documentary"] {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            box-shadow: inset 0 0 0 2px #C6A87C;
+        }
+        .swatch[data-theme="theme-medpaper"] {
+            background: linear-gradient(135deg, #FAF7F2, #EFE5D2);
+            box-shadow: inset 0 0 0 2px #B84A2C;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        button {
+            background: #e07b2e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #b84a2c;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-download {
+            background: #0B3D5C;
+        }
+
+        .btn-download:hover {
+            background: #072a40;
+        }
+    </style>
+</head>
+<body>
+    <div class="studio">
+      <div class="poster-col">
+        <div class="poster-container" id="posterContainer">
+        <img class="poster-bg-image" id="posterImage" src="https://images.unsplash.com/photo-1552058544-f81b51a7a4d6?w=360&h=640&fit=crop" alt="صورة الخلفية" crossorigin="anonymous" referrerpolicy="no-referrer">
+        <div class="poster-scrim"></div>
+        <div class="poster-content">
+
+            <div class="title-section">
+                <div class="title-main" id="titleMain">الثورة السورية</div>
+                <div class="title-accent" id="titleAccent">استحقاق وطني</div>
+                <div class="title-divider"></div>
+                <div class="syria-stars">★ ★ ★</div>
+            </div>
+
+            <div class="footer-section">
+                <div class="footer-text" id="footerText">
+                    الشهادة السورية استحقاق وطني موحد. حرية وكرامة للشعب السوري في كل أرض سورية مقدسة.
+                </div>
+            </div>
+
+            <div class="watermark">@𝓚𝓱𝓪𝓵𝓭𝓸𝓾𝓷𝓐𝓴𝓻𝓪𝓶𝓪𝓱</div>
+        </div>
+        </div>
+      </div>
+
+      <div class="editor-col">
+        <div class="editor-panel" id="editorPanel">
+        <h3>📝 عدّل البوستر</h3>
+
+        <!-- ===== المحتوى ===== -->
+        <div class="section">
+            <div class="section-title">📝 المحتوى</div>
+
+            <div class="form-group">
+                <label>العنوان الرئيسي</label>
+                <input type="text" id="titleMainInput" value="الثورة السورية" placeholder="اكتب العنوان الرئيسي">
+                <div class="field-controls">
+                    <select id="titleMainFont" class="font-sel">
+                        <option value="'Amiri', serif" selected>أميري — نسخ كلاسيكي</option>
+                        <option value="'Tajawal', sans-serif">تجوال — حديث</option>
+                        <option value="'Cairo', sans-serif">القاهرة</option>
+                        <option value="'Reem Kufi', sans-serif">ريم كوفي</option>
+                        <option value="'El Messiri', sans-serif">المسيري</option>
+                        <option value="'Aref Ruqaa', serif">عارف رقعة</option>
+                        <option value="'Markazi Text', serif">مركزي</option>
+                        <option value="'Lalezar', cursive">لاله‌زار — عريض</option>
+                    </select>
+                    <input type="range" id="titleMainSize" min="16" max="64" step="1" value="32">
+                    <span class="size-badge" id="titleMainSizeVal">32px</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>العنوان الثانوي (البرتقالي)</label>
+                <input type="text" id="titleAccentInput" value="استحقاق وطني" placeholder="اكتب العنوان الثانوي">
+                <div class="field-controls">
+                    <select id="titleAccentFont" class="font-sel">
+                        <option value="'Amiri', serif">أميري — نسخ كلاسيكي</option>
+                        <option value="'Tajawal', sans-serif" selected>تجوال — حديث</option>
+                        <option value="'Cairo', sans-serif">القاهرة</option>
+                        <option value="'Reem Kufi', sans-serif">ريم كوفي</option>
+                        <option value="'El Messiri', sans-serif">المسيري</option>
+                        <option value="'Aref Ruqaa', serif">عارف رقعة</option>
+                        <option value="'Markazi Text', serif">مركزي</option>
+                        <option value="'Lalezar', cursive">لاله‌زار — عريض</option>
+                    </select>
+                    <input type="range" id="titleAccentSize" min="12" max="52" step="1" value="28">
+                    <span class="size-badge" id="titleAccentSizeVal">28px</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>النص التفصيلي</label>
+                <textarea id="footerTextInput" placeholder="اكتب النص التفصيلي">الشهادة السورية استحقاق وطني موحد. حرية وكرامة للشعب السوري في كل أرض سورية مقدسة.</textarea>
+                <div class="field-controls">
+                    <select id="footerFont" class="font-sel">
+                        <option value="'Amiri', serif">أميري — نسخ كلاسيكي</option>
+                        <option value="'Tajawal', sans-serif" selected>تجوال — حديث</option>
+                        <option value="'Cairo', sans-serif">القاهرة</option>
+                        <option value="'Reem Kufi', sans-serif">ريم كوفي</option>
+                        <option value="'El Messiri', sans-serif">المسيري</option>
+                        <option value="'Aref Ruqaa', serif">عارف رقعة</option>
+                        <option value="'Markazi Text', serif">مركزي</option>
+                        <option value="'Lalezar', cursive">لاله‌زار — عريض</option>
+                    </select>
+                    <input type="range" id="footerSize" min="9" max="26" step="0.5" value="13.5">
+                    <span class="size-badge" id="footerSizeVal">13.5px</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>عناصر زخرفية</label>
+                <div class="toggles">
+                    <label class="chk"><input type="checkbox" id="tglTitleDivider" checked> الخط تحت العنوان الثانوي</label>
+                    <label class="chk"><input type="checkbox" id="tglFooterDivider" checked> الخط فوق النص التفصيلي</label>
+                    <label class="chk"><input type="checkbox" id="tglStars"> النجوم الثلاث ★ ★ ★</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== الصورة ===== -->
+        <div class="section">
+            <div class="section-title">🖼️ الصورة</div>
+            <div class="form-group">
+                <label>رفع صورة من الجهاز</label>
+                <input type="file" id="imageFile" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label>رابط الصورة (URL) — بديل عن الرفع</label>
+                <input type="text" id="imageInput" value="https://images.unsplash.com/photo-1552058544-f81b51a7a4d6?w=360&h=640&fit=crop" placeholder="اكتب رابط الصورة">
+            </div>
+            <div class="form-group">
+                <label class="slider-label"><span>🌫️ شفافية الصورة</span><span class="val-badge" id="opacityVal">35%</span></label>
+                <input type="range" id="imgOpacity" min="0" max="1" step="0.01" value="0.35">
+            </div>
+            <div class="form-group">
+                <label class="slider-label"><span>↔️ موضع الصورة أفقياً</span><span class="val-badge" id="posXVal">50%</span></label>
+                <input type="range" id="posX" min="0" max="100" step="1" value="50">
+            </div>
+            <div class="form-group">
+                <label class="slider-label"><span>↕️ موضع الصورة عمودياً</span><span class="val-badge" id="posYVal">50%</span></label>
+                <input type="range" id="posY" min="0" max="100" step="1" value="50">
+            </div>
+            <div class="form-group">
+                <label class="slider-label"><span>🌑 قوة التعتيم السفلي</span><span class="val-badge" id="scrimVal">100%</span></label>
+                <input type="range" id="scrimOpacity" min="0" max="1" step="0.01" value="1">
+            </div>
+        </div>
+
+        <!-- ===== التصميم ===== -->
+        <div class="section">
+            <div class="section-title">🎨 التصميم</div>
+            <div class="form-group">
+                <label>الستايل والألوان</label>
+                <select id="themeSelect">
+                    <option value="theme-jableh">جبلة الداكن (الأصلي)</option>
+                    <option value="theme-tiedye">Tie Dye جبلة</option>
+                    <option value="theme-syria">سوريا الجديدة</option>
+                    <option value="theme-documentary">وثائقي (داكن سينمائي)</option>
+                    <option value="theme-medpaper">متوسطي ورقي (فاتح)</option>
+                </select>
+                <div class="theme-swatches">
+                    <div class="swatch active" data-theme="theme-jableh" title="جبلة المتوسطي"></div>
+                    <div class="swatch" data-theme="theme-tiedye" title="Tie Dye جبلة"></div>
+                    <div class="swatch" data-theme="theme-syria" title="سوريا الجديدة"></div>
+                    <div class="swatch" data-theme="theme-documentary" title="وثائقي داكن"></div>
+                    <div class="swatch" data-theme="theme-medpaper" title="متوسطي ورقي فاتح"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>لون التمييز المخصّص (Accent)</label>
+                <div class="accent-row">
+                    <input type="color" id="accentColor" value="#E07B2E">
+                    <button id="resetAccent" class="btn-reset" type="button">↺ إرجاع لون الثيم</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>المقاس / الصيغة</label>
+                <div class="seg-row">
+                    <button type="button" class="seg active" data-fmt="9-16">9:16<small>ستوري/ريل</small></button>
+                    <button type="button" class="seg" data-fmt="4-5">4:5<small>بوست</small></button>
+                    <button type="button" class="seg" data-fmt="1-1">1:1<small>مربّع</small></button>
+                    <button type="button" class="seg" data-fmt="16-9">16:9<small>عريض</small></button>
+                </div>
+                <select id="sizeSelect" style="display:none">
+                    <option value="9-16">9-16</option>
+                    <option value="4-5">4-5</option>
+                    <option value="1-1">1-1</option>
+                    <option value="16-9">16-9</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ===== التوقيع ===== -->
+        <div class="section">
+            <div class="section-title">✍️ التوقيع</div>
+            <div class="form-group">
+                <label class="slider-label"><span>حجم التوقيع</span><span class="val-badge" id="wmSizeVal">11px</span></label>
+                <input type="range" id="wmSize" min="7" max="22" step="0.5" value="11">
+            </div>
+            <div class="form-group">
+                <label>موضع التوقيع</label>
+                <div class="seg-row">
+                    <button type="button" class="seg active" data-align="right">يمين</button>
+                    <button type="button" class="seg" data-align="center">وسط</button>
+                    <button type="button" class="seg" data-align="left">يسار</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <button id="updateBtn">تحديث البوستر</button>
+            <button id="downloadBtn" class="btn-download">⬇️ تحميل صورة PNG</button>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        (function () {
+            function $(id) { return document.getElementById(id); }
+
+            var poster = $('posterContainer');
+
+            // تحجيم تلقائي للنص التفصيلي حتى لا يتراكب مع التوقيع (قياس هندسي مباشر)
+            function autoFitFooter() {
+                var ft = $('footerText');
+                var wm = poster.querySelector('.watermark');
+                ft.style.fontSize = '';                 // إرجاع لحجم CSS (يختلف حسب المقاس)
+                var size = parseFloat(getComputedStyle(ft).fontSize);
+                var min = 8, guard = 0;
+                function gap() { return wm.getBoundingClientRect().top - ft.getBoundingClientRect().bottom; }
+                while (gap() < 8 && size > min && guard < 100) {
+                    size -= 0.5;
+                    ft.style.fontSize = size + 'px';
+                    guard++;
+                }
+            }
+
+            // تحديث النصوص فقط — لا يمسّ الصورة (حتى لا تختفي الصورة المرفوعة)
+            function updatePoster() {
+                $('titleMain').textContent = $('titleMainInput').value;
+                $('titleAccent').textContent = $('titleAccentInput').value;
+                $('footerText').textContent = $('footerTextInput').value;
+                autoFitFooter();
+            }
+
+            // حفظ البوستر صورة PNG بأبعاد المنصّة الدقيقة
+            function downloadPoster() {
+                var btn = $('downloadBtn');
+                var original = btn.textContent;
+                btn.textContent = '⏳ جاري الحفظ...';
+                btn.disabled = true;
+
+                var el = $('posterContainer');
+                // عمودي/مربّع → عرض 1080 ؛ عريض (16:9) → عرض 1920 (=1920×1080)
+                var isLandscape = el.offsetWidth > el.offsetHeight;
+                var targetW = isLandscape ? 1920 : 1080;
+                var scale = targetW / el.offsetWidth;
+                var fmt = $('sizeSelect').value;
+
+                html2canvas(el, {
+                    useCORS: true,
+                    allowTaint: false,
+                    backgroundColor: null,
+                    scale: scale
+                }).then(function (canvas) {
+                    var link = document.createElement('a');
+                    link.download = 'khaldoun-poster-' + fmt + '-' + Date.now() + '.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    btn.textContent = original;
+                    btn.disabled = false;
+                }).catch(function (err) {
+                    console.error(err);
+                    btn.textContent = '⚠️ تعذّر الحفظ — جرّب صورة بدون قيود CORS';
+                    btn.disabled = false;
+                    setTimeout(function () { btn.textContent = original; }, 3500);
+                });
+            }
+
+            // تبديل الثيم (الستايل والألوان) — ألوان نظام Khaldoun Akramah الرسمي
+            var THEMES = ['theme-jableh', 'theme-tiedye', 'theme-syria', 'theme-documentary', 'theme-medpaper'];
+            var THEME_ACCENT = {
+                'theme-jableh':      '#E07B2E',   // citrus
+                'theme-tiedye':      '#C9A557',   // gold
+                'theme-syria':       '#E8A04E',   // amber thread
+                'theme-documentary': '#C6A87C',   // documentary gold
+                'theme-medpaper':    '#B84A2C'    // terracotta on cream
+            };
+
+            // تحويل HEX إلى rgba للنسخة الشفافة (التوقيع)
+            function hexToSoft(hex, alpha) {
+                var h = hex.replace('#', '');
+                var r = parseInt(h.substring(0, 2), 16);
+                var g = parseInt(h.substring(2, 4), 16);
+                var b = parseInt(h.substring(4, 6), 16);
+                return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+            }
+
+            function setAccent(hex) {
+                poster.style.setProperty('--accent', hex);
+                poster.style.setProperty('--accent-soft', hexToSoft(hex, 0.5));
+                $('accentColor').value = hex;
+            }
+
+            function clearCustomAccent() {
+                poster.style.removeProperty('--accent');
+                poster.style.removeProperty('--accent-soft');
+            }
+
+            function applyTheme(theme) {
+                THEMES.forEach(function (t) { poster.classList.remove(t); });
+                if (theme !== 'theme-jableh') { poster.classList.add(theme); }
+
+                clearCustomAccent();                 // عند تبديل الثيم نرجع للون الأصلي
+                $('accentColor').value = THEME_ACCENT[theme];
+                $('themeSelect').value = theme;
+                document.querySelectorAll('.swatch').forEach(function (s) {
+                    s.classList.toggle('active', s.getAttribute('data-theme') === theme);
+                });
+            }
+
+            $('themeSelect').addEventListener('change', function () {
+                applyTheme(this.value);
+            });
+            document.querySelectorAll('.swatch').forEach(function (s) {
+                s.addEventListener('click', function () {
+                    applyTheme(s.getAttribute('data-theme'));
+                    saveState();
+                });
+            });
+
+            // لون التمييز المخصّص
+            $('accentColor').addEventListener('input', function () {
+                setAccent(this.value);
+            });
+            $('resetAccent').addEventListener('click', function () {
+                clearCustomAccent();
+                $('accentColor').value = THEME_ACCENT[$('themeSelect').value];
+                saveState();
+            });
+
+            // تحديث الصورة من رابط URL — مستقل عن النصوص
+            $('imageInput').addEventListener('input', function () {
+                if (this.value.trim()) { $('posterImage').src = this.value.trim(); }
+            });
+
+            // رفع صورة محلية → data URL (بلا قيود CORS عند تحميل PNG)
+            $('imageFile').addEventListener('change', function (e) {
+                var file = e.target.files && e.target.files[0];
+                if (!file) { return; }
+                var reader = new FileReader();
+                reader.onload = function (ev) {
+                    $('posterImage').src = ev.target.result;
+                    $('imageInput').value = '';   // تفريغ حقل URL حتى لا يتعارض مع الصورة المرفوعة
+                    saveState();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // سلايدر شفافية صورة الخلفية
+            $('imgOpacity').addEventListener('input', function () {
+                poster.style.setProperty('--img-opacity', this.value);
+                $('opacityVal').textContent = Math.round(this.value * 100) + '%';
+            });
+
+            // مُحدِّد المقاس / الصيغة (ستوري / بوست / ريل …)
+            var FMT_CLASSES = ['fmt-4-5', 'fmt-1-1', 'fmt-16-9'];
+            $('sizeSelect').addEventListener('change', function () {
+                FMT_CLASSES.forEach(function (c) { poster.classList.remove(c); });
+                if (this.value !== '9-16') { poster.classList.add('fmt-' + this.value); }
+                autoFitFooter();   // المقاس الجديد قد يغيّر المساحة المتاحة
+            });
+
+            // موضع الصورة (object-position) أفقياً وعمودياً
+            function applyImgPos() {
+                $('posterImage').style.objectPosition = $('posX').value + '% ' + $('posY').value + '%';
+            }
+            $('posX').addEventListener('input', function () {
+                $('posXVal').textContent = this.value + '%'; applyImgPos();
+            });
+            $('posY').addEventListener('input', function () {
+                $('posYVal').textContent = this.value + '%'; applyImgPos();
+            });
+
+            // قوة التعتيم السفلي
+            $('scrimOpacity').addEventListener('input', function () {
+                poster.style.setProperty('--scrim-opacity', this.value);
+                $('scrimVal').textContent = Math.round(this.value * 100) + '%';
+            });
+
+            // أزرار المقاس المرئية (segmented) — تتحكم بالـ select المخفي لإعادة استخدام منطقه
+            function setActiveSeg(fmt) {
+                document.querySelectorAll('.seg[data-fmt]').forEach(function (b) {
+                    b.classList.toggle('active', b.getAttribute('data-fmt') === fmt);
+                });
+            }
+            document.querySelectorAll('.seg[data-fmt]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var fmt = b.getAttribute('data-fmt');
+                    setActiveSeg(fmt);
+                    var sel = $('sizeSelect');
+                    sel.value = fmt;
+                    sel.dispatchEvent(new Event('change'));
+                    saveState();
+                });
+            });
+
+            // حجم التوقيع
+            $('wmSize').addEventListener('input', function () {
+                poster.style.setProperty('--wm-size', this.value + 'px');
+                $('wmSizeVal').textContent = this.value + 'px';
+                autoFitFooter();   // تكبير التوقيع قد يقلّل مساحة النص
+            });
+
+            // موضع التوقيع (يمين / وسط / يسار)
+            function setActiveAlign(align) {
+                document.querySelectorAll('.seg[data-align]').forEach(function (b) {
+                    b.classList.toggle('active', b.getAttribute('data-align') === align);
+                });
+            }
+            document.querySelectorAll('.seg[data-align]').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    var align = b.getAttribute('data-align');
+                    setActiveAlign(align);
+                    poster.style.setProperty('--wm-align', align);
+                    saveState();
+                });
+            });
+
+            // ====== أحجام وخطوط النصوص ======
+            function bindSize(sliderId, badgeId, cssVar) {
+                $(sliderId).addEventListener('input', function () {
+                    poster.style.setProperty(cssVar, this.value + 'px');
+                    $(badgeId).textContent = this.value + 'px';
+                    autoFitFooter();
+                });
+            }
+            bindSize('titleMainSize',   'titleMainSizeVal',   '--title-size');
+            bindSize('titleAccentSize', 'titleAccentSizeVal', '--accent-size');
+            bindSize('footerSize',      'footerSizeVal',      '--footer-size');
+
+            function bindFont(selId, cssVar) {
+                $(selId).addEventListener('change', function () {
+                    poster.style.setProperty(cssVar, this.value);
+                    autoFitFooter();
+                });
+            }
+            bindFont('titleMainFont',   '--title-font');
+            bindFont('titleAccentFont', '--accent-font');
+            bindFont('footerFont',      '--footer-font');
+
+            // ====== مفاتيح العناصر الزخرفية ======
+            function bindToggle(chkId, cls, onWhenChecked) {
+                $(chkId).addEventListener('change', function () {
+                    var add = onWhenChecked ? this.checked : !this.checked;
+                    poster.classList.toggle(cls, add);
+                    autoFitFooter();
+                });
+            }
+            bindToggle('tglTitleDivider',  'hide-title-divider',  false); // غير مفعّل = إخفاء
+            bindToggle('tglFooterDivider', 'hide-footer-divider', false);
+            bindToggle('tglStars',         'show-stars',          true);  // مفعّل = إظهار
+
+            // ====== الحفظ التلقائي (localStorage) ======
+            var LS_KEY = 'khaldoun-poster-v1';
+            function collectState() {
+                return {
+                    titleMain: $('titleMainInput').value,
+                    titleAccent: $('titleAccentInput').value,
+                    footerText: $('footerTextInput').value,
+                    imageSrc: $('posterImage').src,
+                    imageUrl: $('imageInput').value,
+                    opacity: $('imgOpacity').value,
+                    posX: $('posX').value,
+                    posY: $('posY').value,
+                    scrim: $('scrimOpacity').value,
+                    theme: $('themeSelect').value,
+                    accent: poster.style.getPropertyValue('--accent') || '',
+                    size: $('sizeSelect').value,
+                    wmSize: $('wmSize').value,
+                    wmAlign: poster.style.getPropertyValue('--wm-align') || 'right',
+                    titleSize: $('titleMainSize').value,
+                    accentSize: $('titleAccentSize').value,
+                    footerSize: $('footerSize').value,
+                    titleFont: $('titleMainFont').value,
+                    accentFont: $('titleAccentFont').value,
+                    footerFont: $('footerFont').value,
+                    tDivider: $('tglTitleDivider').checked,
+                    fDivider: $('tglFooterDivider').checked,
+                    stars: $('tglStars').checked
+                };
+            }
+            var _t;
+            function saveState() {
+                clearTimeout(_t);
+                _t = setTimeout(function () {
+                    var s = collectState();
+                    try { localStorage.setItem(LS_KEY, JSON.stringify(s)); }
+                    catch (e) {                       // قد تتجاوز الصورة حد التخزين
+                        try { s.imageSrc = ''; localStorage.setItem(LS_KEY, JSON.stringify(s)); } catch (e2) {}
+                    }
+                }, 300);
+            }
+            function applyState(s) {
+                if (!s) { return; }
+                if (s.titleMain != null) { $('titleMainInput').value = s.titleMain; }
+                if (s.titleAccent != null) { $('titleAccentInput').value = s.titleAccent; }
+                if (s.footerText != null) { $('footerTextInput').value = s.footerText; }
+                updatePoster();
+                if (s.imageUrl != null) { $('imageInput').value = s.imageUrl; }
+                if (s.imageSrc) { $('posterImage').src = s.imageSrc; }
+                function setRange(id, v) { if (v != null) { $(id).value = v; $(id).dispatchEvent(new Event('input')); } }
+                setRange('imgOpacity', s.opacity);
+                setRange('posX', s.posX);
+                setRange('posY', s.posY);
+                setRange('scrimOpacity', s.scrim);
+                if (s.theme) { applyTheme(s.theme); }
+                if (s.accent) { setAccent(s.accent); }
+                if (s.size) {
+                    var sel = $('sizeSelect'); sel.value = s.size; sel.dispatchEvent(new Event('change'));
+                    setActiveSeg(s.size);
+                }
+                setRange('wmSize', s.wmSize);
+                if (s.wmAlign) {
+                    poster.style.setProperty('--wm-align', s.wmAlign);
+                    setActiveAlign(s.wmAlign);
+                }
+                setRange('titleMainSize', s.titleSize);
+                setRange('titleAccentSize', s.accentSize);
+                setRange('footerSize', s.footerSize);
+                function setSel(id, v) { if (v != null) { $(id).value = v; $(id).dispatchEvent(new Event('change')); } }
+                setSel('titleMainFont', s.titleFont);
+                setSel('titleAccentFont', s.accentFont);
+                setSel('footerFont', s.footerFont);
+                function setChk(id, v) { if (v != null) { $(id).checked = v; $(id).dispatchEvent(new Event('change')); } }
+                setChk('tglTitleDivider', s.tDivider);
+                setChk('tglFooterDivider', s.fDivider);
+                setChk('tglStars', s.stars);
+            }
+
+            // ربط الأزرار والإدخال بعد تحميل الصفحة (يعمل داخل Artifacts في Claude)
+            $('updateBtn').addEventListener('click', updatePoster);
+            $('downloadBtn').addEventListener('click', downloadPoster);
+            ['titleMainInput', 'titleAccentInput', 'footerTextInput']
+                .forEach(function (id) {
+                    $(id).addEventListener('input', updatePoster);
+                });
+
+            // حفظ تلقائي عند أي تغيير في اللوحة + نقرات الثيم/الإعادة/الرفع
+            $('editorPanel').addEventListener('input', saveState);
+            $('editorPanel').addEventListener('change', saveState);
+
+            // استرجاع آخر حالة محفوظة
+            try { applyState(JSON.parse(localStorage.getItem(LS_KEY))); } catch (e) {}
+
+            // تحجيم أولي بعد تحميل الخطوط
+            autoFitFooter();
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(autoFitFooter);
+            }
+        })();
+    </script>
+</body>
+</html>
