@@ -42,12 +42,6 @@
             max-width: 440px;
         }
 
-        @media (max-width: 760px) {
-            .poster-col { position: sticky; top: 6px; z-index: 50; align-self: center; }
-            .poster-container { width: 168px; }
-            .studio { gap: 14px; }
-        }
-
         .poster-container {
             /* === باليت جبلة المتوسطي (الافتراضي) — من نظام Khaldoun Akramah === */
             --poster-bg: linear-gradient(160deg, #062538 0%, #0B3D5C 55%, #0F2A44 100%);
@@ -671,6 +665,59 @@
         .btn-download:hover {
             background: #072a40;
         }
+
+        /* ============================================================
+           جوال (portrait) — آخر الستايل ليتجاوز كل قواعد الأساس
+           ============================================================ */
+        @media (max-width: 760px) {
+            body { padding: 0; }
+            .studio {
+                flex-direction: column;
+                flex-wrap: nowrap;
+                gap: 0;
+                align-items: stretch;
+                max-width: 100%;
+            }
+            /* شريط معاينة مدمج ملتصق بالأعلى (محدود الارتفاع) */
+            .studio .poster-col {
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                background: #eceef1;
+                padding: 8px 0 10px;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            }
+            .studio .poster-col .poster-container {
+                width: auto;
+                height: 34vh;
+                height: 34dvh;          /* ارتفاع ثابت → العرض يُشتقّ من النسبة */
+                max-width: 88vw;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+            }
+            /* أدوات التحرير بعرض كامل ومريحة */
+            .studio .editor-col {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                padding: 12px;
+            }
+            .editor-panel { box-shadow: none; padding: 2px 0 10px; }
+            .section { padding: 14px 13px 4px; }
+            /* 16px يمنع تكبير iOS التلقائي عند التركيز */
+            .form-group input,
+            .form-group textarea,
+            .form-group select,
+            .field-controls .font-sel { font-size: 16px; padding: 12px; }
+            .field-controls input[type="range"] { flex: 0 1 90px; }
+            .seg { padding: 12px 4px; font-size: 14px; }
+            .form-group label.chk { padding: 5px 0; }
+            .form-group label.chk input[type="checkbox"] { width: 22px; height: 22px; }
+            /* ضمان ظهور الحقل أسفل الشريط الملتصق عند التركيز */
+            .form-group { scroll-margin-top: 38dvh; }
+        }
     </style>
 </head>
 <body>
@@ -935,17 +982,20 @@
                 btn.disabled = true;
 
                 var el = $('posterContainer');
-                // عمودي/مربّع → عرض 1080 ؛ عريض (16:9) → عرض 1920 (=1920×1080)
-                var isLandscape = el.offsetWidth > el.offsetHeight;
-                var targetW = isLandscape ? 1920 : 1080;
-                var scale = targetW / el.offsetWidth;
                 var fmt = $('sizeSelect').value;
+                // نلتقط دائماً من القماش الطبيعي 360px (تخطيط سطح المكتب) لتصدير ثابت النِّسَب على أي جهاز
+                var isLandscape = el.classList.contains('fmt-16-9');
+                var targetW = isLandscape ? 1920 : 1080;
+                var NATURAL_W = 360;
+                var scale = targetW / NATURAL_W;
 
                 html2canvas(el, {
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: null,
-                    scale: scale
+                    scale: scale,
+                    windowWidth: 1200,      // يفرض تخطيط سطح المكتب فيُرسم البوستر 360px — نسب ثابتة على الجوال
+                    windowHeight: 2200
                 }).then(function (canvas) {
                     var link = document.createElement('a');
                     link.download = 'khaldoun-poster-' + fmt + '-' + Date.now() + '.png';
