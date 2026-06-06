@@ -52,30 +52,32 @@
                        radial-gradient(circle at 80% 80%, rgba(201, 165, 87, 0.06) 0%, transparent 50%);
             --border-col: #0F2A44;
             --img-opacity: 0.35;          /* شفافية صورة الخلفية — يضبطها السلايدر */
-            --wm-size: 11px;              /* حجم التوقيع — يضبطه السلايدر */
+            /* === أحجام ذكية ذاتية: cqmin = 1% من أصغر بُعد للبوستر → تتناسب تلقائياً مع أي مقاس === */
+            --wm-size: 3.05cqmin;        /* حجم التوقيع (~11px على 9:16) */
             --wm-align: right;            /* موضع التوقيع: right / center / left */
-            --wm-bottom: 9px;            /* الموضع الرأسي للتوقيع (الرفع من الأسفل) */
+            --wm-bottom: 2.5cqmin;       /* الموضع الرأسي للتوقيع */
             --text-body: #f4efe6;         /* لون النص التفصيلي (قابل للتبديل للثيم الفاتح) */
             --title-shadow: 0 2px 12px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.9);
             --body-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
             --scrim-grad: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.6) 28%, rgba(0,0,0,0.25) 60%, transparent 100%);
-            /* أحجام وخطوط النصوص — يضبطها المستخدم */
-            --title-size: 32px;
-            --accent-size: 28px;
-            --footer-size: 13.5px;
+            /* أحجام النصوص الذكية (السلايدر يتجاوزها بـpx عند التعديل اليدوي) */
+            --title-size: 8.9cqmin;      /* ~32px على 9:16 */
+            --accent-size: 7.8cqmin;     /* ~28px */
+            --footer-size: 3.75cqmin;    /* ~13.5px */
             --title-font: 'Amiri', serif;
             --accent-font: 'Tajawal', sans-serif;
             --footer-font: 'Tajawal', sans-serif;
-            /* عناصر الهوية: حجم/موضع/شفافية */
-            --frame-inset: 13px;
+            /* عناصر الهوية: حجم/موضع/شفافية (ذكية) */
+            --frame-inset: 3.6cqmin;     /* ~13px */
             --frame-opacity: 1;
-            --eyebrow-size: 11px;
+            --eyebrow-size: 3.05cqmin;   /* ~11px */
             --eyebrow-opacity: 1;
             --eyebrow-justify: flex-start;
-            --mono-size: 44px;
+            --mono-size: 12.2cqmin;      /* ~44px */
             --mono-opacity: 1;
 
             position: relative;
+            container-type: size;        /* يفعّل وحدات cqmin/cqw/cqh للعناصر الداخلية */
             width: 360px;
             aspect-ratio: 9/16;
             background: var(--poster-bg);
@@ -153,12 +155,7 @@
         .poster-container.fmt-1-1  { aspect-ratio: 1 / 1; }
         .poster-container.fmt-16-9 { aspect-ratio: 16 / 9; }
 
-        /* تكييف الطباعة للمقاس العريض القصير 16:9 حتى لا يزدحم المحتوى */
-        .poster-container.fmt-16-9 {            /* أحجام افتراضية أصغر للمقاس العريض (يتجاوزها المستخدم) */
-            --title-size: 23px;
-            --accent-size: 19px;
-            --footer-size: 12px;
-        }
+        /* المقاس العريض 16:9 — الأحجام الذكية (cqmin) تتكفّل بالتناسب تلقائياً */
         .poster-container.fmt-16-9 .poster-content { padding: 14px 22px 30px; }
         .poster-container.fmt-16-9 .title-section  { margin-bottom: 8px; }
         .poster-container.fmt-16-9 .title-main     { margin-bottom: 6px; }
@@ -1455,7 +1452,7 @@
             });
 
             // ====== الحفظ التلقائي (localStorage) ======
-            var LS_KEY = 'khaldoun-poster-v1';
+            var LS_KEY = 'khaldoun-poster-v2';   // v2: أحجام ذكية cqmin (تجاهل الحفظ القديم بـpx)
             function collectState() {
                 return {
                     titleMain: $('titleMainInput').value,
@@ -1470,12 +1467,12 @@
                     theme: $('themeSelect').value,
                     accent: poster.style.getPropertyValue('--accent') || '',
                     size: $('sizeSelect').value,
-                    wmSize: $('wmSize').value,
+                    wmSize: poster.style.getPropertyValue('--wm-size'),         /* فارغ = ذكي تلقائي */
                     wmAlign: poster.style.getPropertyValue('--wm-align') || 'right',
-                    wmBottom: $('wmBottom').value,
-                    titleSize: $('titleMainSize').value,
-                    accentSize: $('titleAccentSize').value,
-                    footerSize: $('footerSize').value,
+                    wmBottom: poster.style.getPropertyValue('--wm-bottom'),
+                    titleSize: poster.style.getPropertyValue('--title-size'),
+                    accentSize: poster.style.getPropertyValue('--accent-size'),
+                    footerSize: poster.style.getPropertyValue('--footer-size'),
                     titleFont: $('titleMainFont').value,
                     accentFont: $('titleAccentFont').value,
                     footerFont: $('footerFont').value,
@@ -1488,12 +1485,12 @@
                     frame: $('tglFrame').checked,
                     eyebrow: $('tglEyebrow').checked,
                     mono: $('tglMono').checked,
-                    frameInset: $('frameInset').value,
+                    frameInset: poster.style.getPropertyValue('--frame-inset'),
                     frameOpacity: $('frameOpacity').value,
-                    eyebrowSize: $('eyebrowSize').value,
+                    eyebrowSize: poster.style.getPropertyValue('--eyebrow-size'),
                     eyebrowOpacity: $('eyebrowOpacity').value,
                     ebPos: poster.style.getPropertyValue('--eyebrow-justify') || 'flex-start',
-                    monoSize: $('monoSize').value,
+                    monoSize: poster.style.getPropertyValue('--mono-size'),
                     monoOpacity: $('monoOpacity').value,
                     monoPos: poster.classList.contains('mono-tr') ? 'tr' : poster.classList.contains('mono-bl') ? 'bl' : poster.classList.contains('mono-br') ? 'br' : 'tl'
                 };
@@ -1518,6 +1515,14 @@
                 if (s.imageUrl != null) { $('imageInput').value = s.imageUrl; }
                 if (s.imageSrc) { $('posterImage').src = s.imageSrc; }
                 function setRange(id, v) { if (v != null) { $(id).value = v; $(id).dispatchEvent(new Event('input')); } }
+                // تجاوز حجم يدوي (px) محفوظ؛ إن كان فارغاً يبقى الحجم الذكي (cqmin)
+                function setSizeOverride(cssVar, sliderId, badgeId, v) {
+                    if (v) {
+                        poster.style.setProperty(cssVar, v);
+                        var n = parseFloat(v);
+                        if (!isNaN(n)) { $(sliderId).value = n; $(badgeId).textContent = Math.round(n) + 'px'; }
+                    }
+                }
                 setRange('imgOpacity', s.opacity);
                 setRange('posX', s.posX);
                 setRange('posY', s.posY);
@@ -1528,15 +1533,15 @@
                     var sel = $('sizeSelect'); sel.value = s.size; sel.dispatchEvent(new Event('change'));
                     setActiveSeg(s.size);
                 }
-                setRange('wmSize', s.wmSize);
-                setRange('wmBottom', s.wmBottom);
+                setSizeOverride('--wm-size', 'wmSize', 'wmSizeVal', s.wmSize);
+                setSizeOverride('--wm-bottom', 'wmBottom', 'wmBottomVal', s.wmBottom);
                 if (s.wmAlign) {
                     poster.style.setProperty('--wm-align', s.wmAlign);
                     setActiveAlign(s.wmAlign);
                 }
-                setRange('titleMainSize', s.titleSize);
-                setRange('titleAccentSize', s.accentSize);
-                setRange('footerSize', s.footerSize);
+                setSizeOverride('--title-size', 'titleMainSize', 'titleMainSizeVal', s.titleSize);
+                setSizeOverride('--accent-size', 'titleAccentSize', 'titleAccentSizeVal', s.accentSize);
+                setSizeOverride('--footer-size', 'footerSize', 'footerSizeVal', s.footerSize);
                 function setSel(id, v) { if (v != null) { $(id).value = v; $(id).dispatchEvent(new Event('change')); } }
                 setSel('titleMainFont', s.titleFont);
                 setSel('titleAccentFont', s.accentFont);
@@ -1551,14 +1556,15 @@
                 setChk('tglFrame', s.frame);
                 setChk('tglEyebrow', s.eyebrow);
                 setChk('tglMono', s.mono);
-                setRange('frameInset', s.frameInset);
+                setSizeOverride('--frame-inset', 'frameInset', 'frameInsetVal', s.frameInset);
                 setRange('frameOpacity', s.frameOpacity);
-                setRange('eyebrowSize', s.eyebrowSize);
+                setSizeOverride('--eyebrow-size', 'eyebrowSize', 'eyebrowSizeVal', s.eyebrowSize);
                 setRange('eyebrowOpacity', s.eyebrowOpacity);
-                setRange('monoSize', s.monoSize);
+                setSizeOverride('--mono-size', 'monoSize', 'monoSizeVal', s.monoSize);
                 setRange('monoOpacity', s.monoOpacity);
                 if (s.ebPos) { setEbPos(s.ebPos); }
                 if (s.monoPos) { setMonoPos(s.monoPos); }
+                autoFitFooter();
             }
 
             // ربط الأزرار والإدخال بعد تحميل الصفحة (يعمل داخل Artifacts في Claude)
