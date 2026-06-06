@@ -135,6 +135,19 @@
             --scrim-grad: linear-gradient(to top, rgba(250,247,242,0.92) 0%, rgba(250,247,242,0.6) 32%, transparent 100%);
         }
 
+        /* === Syria Shift (تقني) — تيل-كحلي داكن + ذهبي سيتروسي + توهّج وخطوط مسح === */
+        .poster-container.theme-syriashift {
+            --poster-bg: linear-gradient(160deg, #04151f 0%, #061a25 30%, #082030 60%, #051520 100%);
+            --accent: #F5A623;            /* ذهبي سيتروسي */
+            --accent-soft: rgba(245, 166, 35, 0.5);
+            --title-color: #ffffff;
+            --text-body: #E6EDF2;
+            --texture: radial-gradient(circle at 22% 78%, rgba(0, 180, 140, 0.18) 0%, transparent 55%),
+                       radial-gradient(circle at 80% 28%, rgba(0, 160, 120, 0.10) 0%, transparent 50%),
+                       repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.05) 2px, rgba(0, 0, 0, 0.05) 4px);
+            --border-col: #0a2a3a;
+        }
+
         /* === المقاسات / الصيغ — الافتراضي 9:16 (ستوري/ريل) === */
         .poster-container.fmt-4-5  { aspect-ratio: 4 / 5; }
         .poster-container.fmt-1-1  { aspect-ratio: 1 / 1; }
@@ -723,6 +736,10 @@
             background: linear-gradient(135deg, #FAF7F2, #EFE5D2);
             box-shadow: inset 0 0 0 2px #B84A2C;
         }
+        .swatch[data-theme="theme-syriashift"] {
+            background: linear-gradient(135deg, #04151f, #082030 60%, #0a3a30);
+            box-shadow: inset 0 0 0 2px #F5A623;
+        }
 
         .form-group textarea {
             resize: vertical;
@@ -968,6 +985,7 @@
                     <option value="theme-syria">سوريا الجديدة</option>
                     <option value="theme-documentary">وثائقي (داكن سينمائي)</option>
                     <option value="theme-medpaper">متوسطي ورقي (فاتح)</option>
+                    <option value="theme-syriashift">Syria Shift (تقني داكن)</option>
                 </select>
                 <div class="theme-swatches">
                     <div class="swatch active" data-theme="theme-jableh" title="جبلة المتوسطي"></div>
@@ -975,6 +993,7 @@
                     <div class="swatch" data-theme="theme-syria" title="سوريا الجديدة"></div>
                     <div class="swatch" data-theme="theme-documentary" title="وثائقي داكن"></div>
                     <div class="swatch" data-theme="theme-medpaper" title="متوسطي ورقي فاتح"></div>
+                    <div class="swatch" data-theme="theme-syriashift" title="Syria Shift تقني داكن"></div>
                 </div>
             </div>
             <div class="form-group">
@@ -1186,13 +1205,14 @@
             }
 
             // تبديل الثيم (الستايل والألوان) — ألوان نظام Khaldoun Akramah الرسمي
-            var THEMES = ['theme-jableh', 'theme-tiedye', 'theme-syria', 'theme-documentary', 'theme-medpaper'];
+            var THEMES = ['theme-jableh', 'theme-tiedye', 'theme-syria', 'theme-documentary', 'theme-medpaper', 'theme-syriashift'];
             var THEME_ACCENT = {
                 'theme-jableh':      '#E07B2E',   // citrus
                 'theme-tiedye':      '#C9A557',   // gold
                 'theme-syria':       '#E8A04E',   // amber thread
                 'theme-documentary': '#C6A87C',   // documentary gold
-                'theme-medpaper':    '#B84A2C'    // terracotta on cream
+                'theme-medpaper':    '#B84A2C',   // terracotta on cream
+                'theme-syriashift':  '#F5A623'    // citrus gold (tech)
             };
 
             // تحويل HEX إلى rgba للنسخة الشفافة (التوقيع)
