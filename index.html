@@ -1022,13 +1022,7 @@
             <div class="section-title">🪪 الهوية البصرية</div>
 
             <div class="form-group">
-                <label>إظهار/إخفاء العناصر</label>
-                <div class="toggles">
-                    <label class="chk"><input type="checkbox" id="tglGrain" checked> حُبيبات فيلمية (Grain)</label>
-                    <label class="chk"><input type="checkbox" id="tglFrame" checked> الإطار وأقواس الزاوية</label>
-                    <label class="chk"><input type="checkbox" id="tglEyebrow" checked> شريط الإيبرو العلوي</label>
-                    <label class="chk"><input type="checkbox" id="tglMono" checked> المونوغرام (الختم)</label>
-                </div>
+                <label class="chk"><input type="checkbox" id="tglGrain" checked> حُبيبات فيلمية (Grain) — تغطّي البوستر</label>
             </div>
 
             <div class="form-group">
@@ -1044,6 +1038,7 @@
             <!-- الإطار -->
             <div class="id-block" data-el="frame">
                 <div class="id-block-title">▭ الإطار وأقواس الزاوية</div>
+                <div class="form-group"><label class="chk"><input type="checkbox" id="tglFrame" checked> إظهار العنصر</label></div>
                 <div class="form-group">
                     <label class="slider-label"><span>الحجم (المسافة عن الحافة)</span><span class="size-badge" id="frameInsetVal">13px</span></label>
                     <input type="range" id="frameInset" min="2" max="46" step="1" value="13">
@@ -1057,6 +1052,7 @@
             <!-- الإيبرو -->
             <div class="id-block" data-el="eyebrow">
                 <div class="id-block-title">▬ شريط الإيبرو العلوي</div>
+                <div class="form-group"><label class="chk"><input type="checkbox" id="tglEyebrow" checked> إظهار العنصر</label></div>
                 <div class="form-group">
                     <label>النص</label>
                     <input type="text" id="eyebrowInput" value="توثيق · جبلة" placeholder="مثال: توثيق · جبلة">
@@ -1082,6 +1078,7 @@
             <!-- المونوغرام -->
             <div class="id-block" data-el="mono">
                 <div class="id-block-title">◯ المونوغرام (الختم)</div>
+                <div class="form-group"><label class="chk"><input type="checkbox" id="tglMono" checked> إظهار العنصر</label></div>
                 <div class="form-group">
                     <label>النص</label>
                     <input type="text" id="monoInput" value="𝓚.𝓐.𝓐" placeholder="مثال: 𝓚.𝓐.𝓐" maxlength="16">
