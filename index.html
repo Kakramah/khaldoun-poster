@@ -328,13 +328,13 @@
             justify-content: center;
             width: var(--mono-size, 44px);
             height: var(--mono-size, 44px);
-            border: 1.5px solid var(--accent-soft);
+            border: 1.5px solid var(--c-mono, var(--accent-soft));
             border-radius: 50%;
             font-family: 'Amiri', serif;
             font-weight: 700;
             font-size: calc(var(--mono-size, 44px) * 0.30);
             line-height: 1;
-            color: var(--accent);
+            color: var(--c-mono, var(--accent));
             background: rgba(0, 0, 0, 0.12);
             text-shadow: var(--body-shadow);
             white-space: nowrap;
@@ -355,7 +355,7 @@
             font-family: 'Tajawal', sans-serif;
             font-size: var(--eyebrow-size, 11px);
             font-weight: 700;
-            color: var(--accent);
+            color: var(--c-eyebrow, var(--accent));
             margin-bottom: 12px;
             text-shadow: var(--body-shadow);
             opacity: var(--eyebrow-opacity, 1);
@@ -364,7 +364,7 @@
             content: '';
             width: 24px;
             height: 2px;
-            background: var(--accent);
+            background: var(--c-eyebrow, var(--accent));
             display: inline-block;
         }
         .poster-container.eyebrow-on .eyebrow { display: flex; }
@@ -388,7 +388,7 @@
             font-family: var(--title-font);
             font-size: var(--title-size);
             font-weight: bold;
-            color: var(--title-color);
+            color: var(--c-title, var(--title-color));
             line-height: 1.3;
             margin-bottom: 12px;
             text-shadow: var(--title-shadow);
@@ -396,7 +396,7 @@
 
         .title-accent {
             font-size: var(--accent-size);
-            color: var(--accent);
+            color: var(--c-accent, var(--accent));
             font-weight: bold;
             font-family: var(--accent-font);
             margin-bottom: 8px;
@@ -420,7 +420,7 @@
 
         .footer-text {
             font-size: var(--footer-size);
-            color: var(--text-body);
+            color: var(--c-footer, var(--text-body));
             line-height: 1.65;
             font-weight: 500;
             text-align: right;
@@ -456,7 +456,7 @@
             right: 20px;
             font-size: var(--wm-size, 11px);
             text-align: var(--wm-align, right);
-            color: var(--accent-soft);
+            color: var(--c-wm, var(--accent-soft));
             font-family: 'Amiri', serif;
             z-index: 10;
             font-weight: bold;
@@ -1144,6 +1144,10 @@
                     <input type="range" id="titleMainSize" min="16" max="64" step="1" value="32">
                     <span class="size-badge" id="titleMainSizeVal">32px</span>
                 </div>
+                <div class="accent-row" style="margin-top:8px;">
+                    <input type="color" id="cTitle" value="#F4EFE6" aria-label="لون العنوان الرئيسي">
+                    <button type="button" class="btn-reset" id="cTitleReset">↺ لون الثيم</button>
+                </div>
             </div>
 
             <div class="form-group">
@@ -1163,6 +1167,10 @@
                     <input type="range" id="titleAccentSize" min="12" max="52" step="1" value="28">
                     <span class="size-badge" id="titleAccentSizeVal">28px</span>
                 </div>
+                <div class="accent-row" style="margin-top:8px;">
+                    <input type="color" id="cAccent" value="#E07B2E" aria-label="لون العنوان الثانوي">
+                    <button type="button" class="btn-reset" id="cAccentReset">↺ لون الثيم</button>
+                </div>
             </div>
 
             <div class="form-group">
@@ -1181,6 +1189,10 @@
                     </select>
                     <input type="range" id="footerSize" min="9" max="26" step="0.5" value="13.5">
                     <span class="size-badge" id="footerSizeVal">13.5px</span>
+                </div>
+                <div class="accent-row" style="margin-top:8px;">
+                    <input type="color" id="cFooter" value="#F4EFE6" aria-label="لون النص التفصيلي">
+                    <button type="button" class="btn-reset" id="cFooterReset">↺ لون الثيم</button>
                 </div>
             </div>
 
@@ -1272,6 +1284,14 @@
                 </div>
             </div>
             <div class="form-group">
+                <label>🎨 توحيد ألوان كل العناصر بلون واحد</label>
+                <div class="accent-row">
+                    <input type="color" id="unifyColor" value="#E07B2E" aria-label="لون موحّد">
+                    <button type="button" class="btn-primary" id="unifyApply" style="padding:9px 14px;font-size:13px;">وحّد الكل</button>
+                    <button type="button" class="btn-reset" id="unifyReset">↺ للثيم</button>
+                </div>
+            </div>
+            <div class="form-group">
                 <label>المقاس / الصيغة</label>
                 <div class="seg-row">
                     <button type="button" class="seg active" data-fmt="9-16">9:16<small>ستوري/ريل</small></button>
@@ -1357,6 +1377,13 @@
                     <input type="range" id="eyebrowOpacity" min="0" max="1" step="0.01" value="1">
                 </div>
                 <div class="form-group">
+                    <label>اللون</label>
+                    <div class="accent-row">
+                        <input type="color" id="cEyebrow" value="#E07B2E" aria-label="لون الإيبرو">
+                        <button type="button" class="btn-reset" id="cEyebrowReset">↺ لون الثيم</button>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label>الموضع</label>
                     <div class="seg-row">
                         <button type="button" class="seg active" data-ebpos="flex-start">يمين</button>
@@ -1381,6 +1408,13 @@
                 <div class="form-group">
                     <label class="slider-label"><span>الشفافية</span><span class="val-badge" id="monoOpacityVal">100%</span></label>
                     <input type="range" id="monoOpacity" min="0" max="1" step="0.01" value="1">
+                </div>
+                <div class="form-group">
+                    <label>اللون</label>
+                    <div class="accent-row">
+                        <input type="color" id="cMono" value="#E07B2E" aria-label="لون الختم">
+                        <button type="button" class="btn-reset" id="cMonoReset">↺ لون الثيم</button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>الموضع (الركن)</label>
@@ -1411,6 +1445,13 @@
                 <div class="form-group">
                     <label class="slider-label"><span>الموضع الرأسي (رفع من الأسفل)</span><span class="size-badge" id="wmBottomVal">9px</span></label>
                     <input type="range" id="wmBottom" min="0" max="150" step="1" value="9">
+                </div>
+                <div class="form-group">
+                    <label>اللون</label>
+                    <div class="accent-row">
+                        <input type="color" id="cWm" value="#E07B2E" aria-label="لون التوقيع">
+                        <button type="button" class="btn-reset" id="cWmReset">↺ لون الثيم</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1833,6 +1874,32 @@
             bindDecoColor('flineColor', '--fline-color', 'flineColorReset');
             bindDecoColor('starsColor', '--stars-color', 'starsColorReset');
 
+            // ألوان العناصر النصية/الهوية
+            function bindElColor(pickerId, resetId, cssVar) {
+                $(pickerId).addEventListener('input', function () { poster.style.setProperty(cssVar, this.value); });
+                $(resetId).addEventListener('click', function () { poster.style.removeProperty(cssVar); saveState(); });
+            }
+            bindElColor('cTitle', 'cTitleReset', '--c-title');
+            bindElColor('cAccent', 'cAccentReset', '--c-accent');
+            bindElColor('cFooter', 'cFooterReset', '--c-footer');
+            bindElColor('cEyebrow', 'cEyebrowReset', '--c-eyebrow');
+            bindElColor('cMono', 'cMonoReset', '--c-mono');
+            bindElColor('cWm', 'cWmReset', '--c-wm');
+
+            // توحيد كل الألوان بلون واحد
+            var ALL_COLOR_VARS = ['--c-title', '--c-accent', '--c-footer', '--c-eyebrow', '--c-mono', '--c-wm', '--frame-color', '--divider-color', '--fline-color', '--stars-color'];
+            var ALL_COLOR_PICKERS = ['cTitle', 'cAccent', 'cFooter', 'cEyebrow', 'cMono', 'cWm', 'frameColor', 'dividerColor', 'flineColor', 'starsColor'];
+            $('unifyApply').addEventListener('click', function () {
+                var c = $('unifyColor').value;
+                ALL_COLOR_VARS.forEach(function (v) { poster.style.setProperty(v, c); });
+                ALL_COLOR_PICKERS.forEach(function (id) { if ($(id)) { $(id).value = c; } });
+                haptic(); showToast('تم توحيد الألوان ✓'); saveState();
+            });
+            $('unifyReset').addEventListener('click', function () {
+                ALL_COLOR_VARS.forEach(function (v) { poster.style.removeProperty(v); });
+                haptic(); showToast('عادت ألوان الثيم ✓'); saveState();
+            });
+
             // حجم/شفافية/موضع لكل عنصر هوية
             function bindPx(sliderId, badgeId, cssVar, fit) {
                 $(sliderId).addEventListener('input', function () {
@@ -1922,6 +1989,12 @@
                     flineColor: poster.style.getPropertyValue('--fline-color'),
                     starsSize: poster.style.getPropertyValue('--stars-size'),
                     starsColor: poster.style.getPropertyValue('--stars-color'),
+                    cTitle: poster.style.getPropertyValue('--c-title'),
+                    cAccent: poster.style.getPropertyValue('--c-accent'),
+                    cFooter: poster.style.getPropertyValue('--c-footer'),
+                    cEyebrow: poster.style.getPropertyValue('--c-eyebrow'),
+                    cMono: poster.style.getPropertyValue('--c-mono'),
+                    cWm: poster.style.getPropertyValue('--c-wm'),
                     eyebrowSize: poster.style.getPropertyValue('--eyebrow-size'),
                     eyebrowOpacity: $('eyebrowOpacity').value,
                     ebPos: poster.style.getPropertyValue('--eyebrow-justify') || 'flex-start',
@@ -2016,6 +2089,12 @@
                 setCol('--divider-color', 'dividerColor', s.dividerColor);
                 setCol('--fline-color', 'flineColor', s.flineColor);
                 setCol('--stars-color', 'starsColor', s.starsColor);
+                setCol('--c-title', 'cTitle', s.cTitle);
+                setCol('--c-accent', 'cAccent', s.cAccent);
+                setCol('--c-footer', 'cFooter', s.cFooter);
+                setCol('--c-eyebrow', 'cEyebrow', s.cEyebrow);
+                setCol('--c-mono', 'cMono', s.cMono);
+                setCol('--c-wm', 'cWm', s.cWm);
                 setSizeOverride('--eyebrow-size', 'eyebrowSize', 'eyebrowSizeVal', s.eyebrowSize);
                 setRange('eyebrowOpacity', s.eyebrowOpacity);
                 setSizeOverride('--mono-size', 'monoSize', 'monoSizeVal', s.monoSize);
