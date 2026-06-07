@@ -774,6 +774,97 @@
         }
 
         /* ============================================================
+           هيكل التطبيق: شاشات + تنقّل سفلي + شيت "جديد"
+           ============================================================ */
+        .screen { display: none; }
+        .screen.is-active { display: block; }
+
+        .bottom-nav {
+            position: fixed; left: 0; right: 0; bottom: 0;
+            min-height: calc(58px + env(safe-area-inset-bottom));
+            padding-bottom: env(safe-area-inset-bottom);
+            background: #fff; border-top: 1px solid #e7eaee;
+            display: flex; align-items: center; justify-content: space-around;
+            z-index: 200; box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+        }
+        body.in-editor .bottom-nav { display: none; }
+        .nav-item {
+            background: none; border: 0; color: #7a8290;
+            font-family: 'Tajawal', sans-serif; font-size: 11px; font-weight: 700;
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            cursor: pointer; min-width: 64px; padding: 8px 6px;
+        }
+        .nav-item .ico { font-size: 20px; line-height: 1; }
+        .nav-item.is-active { color: #0B3D5C; }
+        .nav-item:disabled { opacity: .4; cursor: default; }
+        .nav-fab {
+            background: #E07B2E; color: #fff; width: 56px; height: 56px;
+            border-radius: 50%; font-size: 26px; margin-top: -20px;
+            box-shadow: 0 6px 18px rgba(224,123,46,.45); justify-content: center;
+        }
+
+        #screen-home { padding: 0 0 calc(84px + env(safe-area-inset-bottom)); min-height: 100dvh; }
+        .app-header {
+            padding: calc(16px + env(safe-area-inset-top)) 18px 14px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .app-header h1 { font-size: 20px; color: #0B3D5C; font-weight: 800; }
+        .brand-mark {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 1.5px solid #E07B2E; color: #E07B2E;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Amiri', serif; font-size: 12px; font-weight: 700;
+        }
+        .home-body { padding: 4px 16px; }
+        .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .proj-card {
+            background: #fff; border: 1px solid #eceef1; border-radius: 12px;
+            overflow: hidden; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.05);
+            transition: transform .15s;
+        }
+        .proj-card:active { transform: scale(.97); }
+        .proj-thumb { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #11202b; display: block; }
+        .proj-meta { padding: 9px 11px; }
+        .proj-meta .nm { font-size: 13px; font-weight: 700; color: #2a3340; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .proj-meta .dt { font-size: 11px; color: #98a1ad; margin-top: 2px; }
+        .empty-state { text-align: center; padding: 56px 24px; color: #6b7480; }
+        .empty-state .empty-art { font-size: 52px; margin-bottom: 12px; opacity: .8; }
+        .empty-state p { font-size: 15px; margin-bottom: 18px; }
+        .btn-primary {
+            background: #E07B2E; color: #fff; border: 0; border-radius: 10px;
+            padding: 14px 22px; font-family: 'Tajawal', sans-serif; font-weight: 800;
+            font-size: 15px; cursor: pointer;
+        }
+        .btn-text { background: none; border: 0; color: #7a8290; font-family: 'Tajawal', sans-serif; font-weight: 700; padding: 12px; cursor: pointer; }
+
+        .editor-bar {
+            position: sticky; top: 0; z-index: 60;
+            display: flex; align-items: center; gap: 10px;
+            padding: calc(8px + env(safe-area-inset-top)) 14px 8px;
+            background: #f0f0f0;
+        }
+        .icon-btn {
+            background: #fff; border: 1px solid #dfe3e8; border-radius: 9px;
+            width: 42px; height: 42px; font-size: 18px; cursor: pointer; color: #2a3340;
+            display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+        }
+        .icon-btn.primary { background: #E07B2E; color: #fff; border-color: #E07B2E; }
+        .proj-name {
+            flex: 1; min-width: 0; border: 1px solid transparent; background: transparent;
+            font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 16px; color: #2a3340;
+            padding: 8px; border-radius: 8px; text-align: center;
+        }
+        .proj-name:focus { outline: none; background: #fff; border-color: #E07B2E; }
+
+        .sheet-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; justify-content: center; }
+        .sheet-overlay[hidden] { display: none; }
+        .sheet { background: #fff; width: 100%; max-width: 480px; border-radius: 18px 18px 0 0; padding: 8px 18px calc(20px + env(safe-area-inset-bottom)); animation: sheet-up .25s ease-out; }
+        @keyframes sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .sheet-handle { width: 40px; height: 4px; border-radius: 4px; background: #d6dbe0; margin: 6px auto 14px; }
+        .sheet h3 { color: #0B3D5C; font-size: 17px; margin-bottom: 6px; }
+        .sheet > label { display: block; font-size: 12.5px; font-weight: 700; color: #3a4250; margin: 16px 0 8px; }
+
+        /* ============================================================
            جوال (portrait) — آخر الستايل ليتجاوز كل قواعد الأساس
            ============================================================ */
         @media (max-width: 760px) {
@@ -831,6 +922,29 @@
     </style>
 </head>
 <body>
+    <!-- ===== الشاشة الرئيسية ===== -->
+    <div id="screen-home" class="screen is-active">
+      <header class="app-header">
+        <h1>استوديو خلدون</h1>
+        <div class="brand-mark">𝓚𝓐</div>
+      </header>
+      <div class="home-body">
+        <div id="projectGrid" class="project-grid"></div>
+        <div id="emptyState" class="empty-state">
+          <div class="empty-art">🖼️</div>
+          <p>لا مشاريع بعد — ابدأ أول بوستر</p>
+          <button class="btn-primary" id="emptyNewBtn">➕ بوستر جديد</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== شاشة المحرّر ===== -->
+    <div id="screen-editor" class="screen">
+      <header class="editor-bar">
+        <button class="icon-btn" id="backBtn" aria-label="رجوع للمشاريع">⟶</button>
+        <input type="text" id="projName" class="proj-name" value="بوستر بدون عنوان" aria-label="اسم المشروع">
+        <button class="icon-btn primary" id="exportTopBtn" aria-label="تصدير">⬇️</button>
+      </header>
     <div class="studio">
       <div class="poster-col">
         <div class="poster-container grain-on frame-on eyebrow-on mono-on" id="posterContainer">
@@ -1131,6 +1245,40 @@
         </div>
       </div>
     </div>
+    </div><!-- /screen-editor -->
+
+    <!-- ===== شيت: بوستر جديد ===== -->
+    <div id="newSheet" class="sheet-overlay" hidden>
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <h3>بوستر جديد</h3>
+        <label>المقاس</label>
+        <div class="seg-row" id="newFmt">
+          <button type="button" class="seg active" data-fmt="9-16">9:16<small>ستوري</small></button>
+          <button type="button" class="seg" data-fmt="4-5">4:5<small>بوست</small></button>
+          <button type="button" class="seg" data-fmt="1-1">1:1<small>مربّع</small></button>
+          <button type="button" class="seg" data-fmt="16-9">16:9<small>عريض</small></button>
+        </div>
+        <label>الثيم</label>
+        <div class="theme-swatches" id="newTheme">
+          <div class="swatch active" data-theme="theme-jableh" title="جبلة"></div>
+          <div class="swatch" data-theme="theme-tiedye" title="Tie Dye"></div>
+          <div class="swatch" data-theme="theme-syria" title="سوريا"></div>
+          <div class="swatch" data-theme="theme-documentary" title="وثائقي"></div>
+          <div class="swatch" data-theme="theme-medpaper" title="ورقي"></div>
+          <div class="swatch" data-theme="theme-syriashift" title="Syria Shift"></div>
+        </div>
+        <button class="btn-primary" id="newStartBtn" style="width:100%;margin-top:18px;">ابدأ التصميم</button>
+        <button class="btn-text" id="newCancelBtn" style="width:100%;">إلغاء</button>
+      </div>
+    </div>
+
+    <!-- ===== التنقّل السفلي ===== -->
+    <nav class="bottom-nav">
+      <button class="nav-item is-active" id="navHome"><span class="ico">🏠</span><span>المشاريع</span></button>
+      <button class="nav-item nav-fab" id="navNew" aria-label="بوستر جديد">➕</button>
+      <button class="nav-item" id="navSettings" disabled><span class="ico">⚙️</span><span>إعدادات</span></button>
+    </nav>
 
     <script>
         (function () {
@@ -1140,6 +1288,7 @@
 
             // تحجيم تلقائي للنص التفصيلي حتى لا يتراكب مع التوقيع (قياس هندسي مباشر)
             function autoFitFooter() {
+                if (!poster.offsetParent) { return; }   // لا تقِس والمحرّر مخفيّ
                 var ft = $('footerText');
                 var wm = poster.querySelector('.watermark');
                 ft.style.fontSize = '';                 // إرجاع لحجم CSS (يختلف حسب المقاس)
@@ -1501,6 +1650,20 @@
                     catch (e) {                       // قد تتجاوز الصورة حد التخزين
                         try { s.imageSrc = ''; localStorage.setItem(LS_KEY, JSON.stringify(s)); } catch (e2) {}
                     }
+                    // تحديث حالة المشروع الحالي مباشرةً (بلا مصغّرة — تُولَّد عند الرجوع)
+                    if (typeof currentPid !== 'undefined' && currentPid) {
+                        try {
+                            var arr = loadProjects();
+                            var ids = arr.map(function (x) { return x.id; });
+                            var i = ids.indexOf(currentPid);
+                            var rec = (i >= 0) ? arr[i] : { id: currentPid, thumb: '' };
+                            rec.name = $('projName').value || 'بوستر';
+                            rec.state = s;
+                            rec.updatedAt = Date.now();
+                            if (i >= 0) { arr[i] = rec; } else { arr.push(rec); }
+                            saveProjects(arr);
+                        } catch (e3) {}
+                    }
                 }, 300);
             }
             function applyState(s) {
@@ -1608,13 +1771,106 @@
             });
             showEl('frame');   // العنصر الافتراضي
 
-            // استرجاع آخر حالة محفوظة
-            try { applyState(JSON.parse(localStorage.getItem(LS_KEY))); } catch (e) {}
+            // ============ هيكل التطبيق (شاشات + مشاريع متعددة) ============
+            var PKEY = 'khaldoun-projects';
+            var DEFAULT_STATE = collectState();   // قماش فارغ ذكي (يُلتقط قبل أي تعديل)
+            var currentPid = null;
 
-            // تحجيم أولي بعد تحميل الخطوط
-            autoFitFooter();
+            function loadProjects() { try { return JSON.parse(localStorage.getItem(PKEY)) || []; } catch (e) { return []; } }
+            function saveProjects(arr) { try { localStorage.setItem(PKEY, JSON.stringify(arr)); } catch (e) {} }
+
+            function showScreen(name) {
+                document.querySelectorAll('.screen').forEach(function (s) { s.classList.toggle('is-active', s.id === 'screen-' + name); });
+                document.body.classList.toggle('in-editor', name === 'editor');
+                $('navHome').classList.toggle('is-active', name === 'home');
+                window.scrollTo(0, 0);
+                if (name === 'editor') { autoFitFooter(); }
+            }
+
+            function fmtDate(ts) { try { return new Date(ts).toLocaleDateString('ar-EG'); } catch (e) { return ''; } }
+
+            function renderHome() {
+                var arr = loadProjects().sort(function (a, b) { return (b.updatedAt || 0) - (a.updatedAt || 0); });
+                var grid = $('projectGrid'); grid.innerHTML = '';
+                $('emptyState').style.display = arr.length ? 'none' : 'block';
+                arr.forEach(function (p) {
+                    var card = document.createElement('div'); card.className = 'proj-card';
+                    var img = document.createElement('img'); img.className = 'proj-thumb'; img.alt = ''; if (p.thumb) { img.src = p.thumb; }
+                    var meta = document.createElement('div'); meta.className = 'proj-meta';
+                    meta.innerHTML = '<div class="nm"></div><div class="dt"></div>';
+                    meta.querySelector('.nm').textContent = p.name || 'بوستر';
+                    meta.querySelector('.dt').textContent = fmtDate(p.updatedAt);
+                    card.appendChild(img); card.appendChild(meta);
+                    card.addEventListener('click', function () { openProject(p.id); });
+                    grid.appendChild(card);
+                });
+            }
+
+            function openProject(id) {
+                var p = loadProjects().filter(function (x) { return x.id === id; })[0];
+                if (!p) { return; }
+                currentPid = id;
+                applyState(p.state);
+                $('projName').value = p.name || 'بوستر';
+                showScreen('editor');
+            }
+
+            function newProject(fmt, theme) {
+                currentPid = 'p' + Date.now();
+                applyState(DEFAULT_STATE);
+                var sel = $('sizeSelect'); sel.value = fmt; sel.dispatchEvent(new Event('change')); setActiveSeg(fmt);
+                applyTheme(theme);
+                $('projName').value = 'بوستر بدون عنوان';
+                showScreen('editor');
+                saveState();   // يُنشئ سجل المشروع
+            }
+
+            function commitThumb(cb) {
+                if (!currentPid) { if (cb) { cb(); } return; }
+                html2canvas($('posterContainer'), { useCORS: true, backgroundColor: null, scale: 0.5, windowWidth: 1200, windowHeight: 2200 })
+                    .then(function (c) {
+                        try {
+                            var thumb = c.toDataURL('image/jpeg', 0.6);
+                            var arr = loadProjects(); var i = arr.map(function (x) { return x.id; }).indexOf(currentPid);
+                            if (i >= 0) { arr[i].thumb = thumb; saveProjects(arr); }
+                        } catch (e) {}
+                        if (cb) { cb(); }
+                    }).catch(function () { if (cb) { cb(); } });
+            }
+
+            // التنقّل
+            $('navHome').addEventListener('click', function () { showScreen('home'); renderHome(); });
+            $('backBtn').addEventListener('click', function () { saveState(); commitThumb(function () { renderHome(); showScreen('home'); }); });
+            $('exportTopBtn').addEventListener('click', downloadPoster);
+            $('projName').addEventListener('input', saveState);
+
+            // شيت "جديد"
+            function openNew() { $('newSheet').hidden = false; }
+            function closeNew() { $('newSheet').hidden = true; }
+            $('navNew').addEventListener('click', openNew);
+            $('emptyNewBtn').addEventListener('click', openNew);
+            $('newCancelBtn').addEventListener('click', closeNew);
+            $('newSheet').addEventListener('click', function (e) { if (e.target === $('newSheet')) { closeNew(); } });
+            var newPickFmt = '9-16', newPickTheme = 'theme-jableh';
+            $('newFmt').querySelectorAll('.seg').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    $('newFmt').querySelectorAll('.seg').forEach(function (x) { x.classList.remove('active'); });
+                    b.classList.add('active'); newPickFmt = b.getAttribute('data-fmt');
+                });
+            });
+            $('newTheme').querySelectorAll('.swatch').forEach(function (s) {
+                s.addEventListener('click', function () {
+                    $('newTheme').querySelectorAll('.swatch').forEach(function (x) { x.classList.remove('active'); });
+                    s.classList.add('active'); newPickTheme = s.getAttribute('data-theme');
+                });
+            });
+            $('newStartBtn').addEventListener('click', function () { closeNew(); newProject(newPickFmt, newPickTheme); });
+
+            // بدء التطبيق على الشاشة الرئيسية
+            renderHome();
+            showScreen('home');
             if (document.fonts && document.fonts.ready) {
-                document.fonts.ready.then(autoFitFooter);
+                document.fonts.ready.then(function () { if (document.body.classList.contains('in-editor')) { autoFitFooter(); } });
             }
         })();
     </script>
