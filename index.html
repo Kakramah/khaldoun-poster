@@ -77,6 +77,10 @@
             --frame-inset: 3.6cqmin;     /* ~13px */
             --frame-opacity: 1;
             --frame-color: var(--accent);   /* لون الإطار (افتراضياً يتبع التمييز؛ يتجاوزه المنتقي) */
+            /* عناصر زخرفية: خط تحت العنوان / خط فوق النص / النجوم — حجم ولون */
+            --divider-w: 80px;   --divider-color: var(--accent);
+            --fline-w: 2px;      --fline-color: var(--accent);
+            --stars-size: 18px;  --stars-color: var(--accent);
             --eyebrow-size: 3.05cqmin;   /* ~11px */
             --eyebrow-opacity: 1;
             --eyebrow-justify: flex-start;
@@ -401,8 +405,8 @@
 
         .title-divider {
             height: 2px;
-            width: 80px;
-            background: linear-gradient(90deg, var(--accent), transparent);
+            width: var(--divider-w, 80px);
+            background: linear-gradient(90deg, var(--divider-color, var(--accent)), transparent);
             margin-bottom: 12px;
         }
 
@@ -410,7 +414,7 @@
         .footer-section {
             flex-grow: 0;
             padding-top: 12px;
-            border-top: 2px solid var(--accent);
+            border-top: var(--fline-w, 2px) solid var(--fline-color, var(--accent));
             margin-top: auto;       /* شريط التوقيع محجوز عبر padding-bottom للمحتوى */
         }
 
@@ -429,8 +433,8 @@
             display: none;
             gap: 8px;
             margin-bottom: 14px;
-            font-size: 18px;
-            color: var(--accent);
+            font-size: var(--stars-size, 18px);
+            color: var(--stars-color, var(--accent));
             letter-spacing: 4px;
         }
         .poster-container.show-stars .syria-stars {
@@ -559,6 +563,12 @@
         }
         .fr-chip:hover { border-color: #E07B2E; }
         .fr-chip.active { background: #0B3D5C; color: #fff; border-color: #0B3D5C; }
+
+        /* تحكّمات العنصر الزخرفي (حجم + لون) */
+        .deco-controls { display: flex; align-items: center; gap: 8px; margin: 8px 0 6px; flex-wrap: wrap; }
+        .deco-controls input[type="range"] { flex: 1 1 90px; height: 24px; }
+        .deco-controls input[type="color"] { width: 40px; height: 34px; padding: 2px; border: 1px solid #d8dde3; border-radius: 6px; background: #fff; cursor: pointer; flex: 0 0 auto; }
+        .mini-reset { padding: 7px 9px; font-size: 13px; flex: 0 0 auto; }
         /* يظهر تحكّم العنصر المختار فقط */
         .id-block[data-el] { display: none; }
         .id-block[data-el].el-visible { display: block; }
@@ -1176,10 +1186,29 @@
 
             <div class="form-group">
                 <label>عناصر زخرفية</label>
-                <div class="toggles">
-                    <label class="chk"><input type="checkbox" id="tglTitleDivider" checked> الخط تحت العنوان الثانوي</label>
-                    <label class="chk"><input type="checkbox" id="tglFooterDivider" checked> الخط فوق النص التفصيلي</label>
-                    <label class="chk"><input type="checkbox" id="tglStars"> النجوم الثلاث ★ ★ ★</label>
+
+                <label class="chk"><input type="checkbox" id="tglTitleDivider" checked> الخط تحت العنوان الثانوي</label>
+                <div class="deco-controls">
+                    <input type="range" id="dividerW" min="20" max="240" step="2" value="80" aria-label="عرض الخط">
+                    <span class="size-badge" id="dividerWVal">80px</span>
+                    <input type="color" id="dividerColor" value="#E07B2E" aria-label="لون الخط">
+                    <button type="button" class="btn-reset mini-reset" id="dividerColorReset">↺</button>
+                </div>
+
+                <label class="chk" style="margin-top:6px;"><input type="checkbox" id="tglFooterDivider" checked> الخط فوق النص التفصيلي</label>
+                <div class="deco-controls">
+                    <input type="range" id="flineW" min="1" max="10" step="1" value="2" aria-label="سماكة الخط">
+                    <span class="size-badge" id="flineWVal">2px</span>
+                    <input type="color" id="flineColor" value="#E07B2E" aria-label="لون الخط">
+                    <button type="button" class="btn-reset mini-reset" id="flineColorReset">↺</button>
+                </div>
+
+                <label class="chk" style="margin-top:6px;"><input type="checkbox" id="tglStars"> النجوم الثلاث ★ ★ ★</label>
+                <div class="deco-controls">
+                    <input type="range" id="starsSize" min="10" max="60" step="1" value="18" aria-label="حجم النجوم">
+                    <span class="size-badge" id="starsSizeVal">18px</span>
+                    <input type="color" id="starsColor" value="#E07B2E" aria-label="لون النجوم">
+                    <button type="button" class="btn-reset mini-reset" id="starsColorReset">↺</button>
                 </div>
             </div>
         </div>
@@ -1789,6 +1818,21 @@
             $('frameColor').addEventListener('input', function () { poster.style.setProperty('--frame-color', this.value); });
             $('frameColorReset').addEventListener('click', function () { poster.style.removeProperty('--frame-color'); saveState(); });
 
+            // العناصر الزخرفية: حجم + لون
+            function bindDecoSize(id, badge, cssVar) {
+                $(id).addEventListener('input', function () { poster.style.setProperty(cssVar, this.value + 'px'); $(badge).textContent = this.value + 'px'; autoFitFooter(); });
+            }
+            bindDecoSize('dividerW', 'dividerWVal', '--divider-w');
+            bindDecoSize('flineW', 'flineWVal', '--fline-w');
+            bindDecoSize('starsSize', 'starsSizeVal', '--stars-size');
+            function bindDecoColor(id, cssVar, resetId) {
+                $(id).addEventListener('input', function () { poster.style.setProperty(cssVar, this.value); });
+                $(resetId).addEventListener('click', function () { poster.style.removeProperty(cssVar); saveState(); });
+            }
+            bindDecoColor('dividerColor', '--divider-color', 'dividerColorReset');
+            bindDecoColor('flineColor', '--fline-color', 'flineColorReset');
+            bindDecoColor('starsColor', '--stars-color', 'starsColorReset');
+
             // حجم/شفافية/موضع لكل عنصر هوية
             function bindPx(sliderId, badgeId, cssVar, fit) {
                 $(sliderId).addEventListener('input', function () {
@@ -1872,6 +1916,12 @@
                     frameOpacity: $('frameOpacity').value,
                     frameStyle: (function () { var c = poster.className.match(/\bfr-(\w+)/); return c ? c[1] : 'classic'; })(),
                     frameColor: poster.style.getPropertyValue('--frame-color'),
+                    dividerW: poster.style.getPropertyValue('--divider-w'),
+                    dividerColor: poster.style.getPropertyValue('--divider-color'),
+                    flineW: poster.style.getPropertyValue('--fline-w'),
+                    flineColor: poster.style.getPropertyValue('--fline-color'),
+                    starsSize: poster.style.getPropertyValue('--stars-size'),
+                    starsColor: poster.style.getPropertyValue('--stars-color'),
                     eyebrowSize: poster.style.getPropertyValue('--eyebrow-size'),
                     eyebrowOpacity: $('eyebrowOpacity').value,
                     ebPos: poster.style.getPropertyValue('--eyebrow-justify') || 'flex-start',
@@ -1959,6 +2009,13 @@
                 setRange('frameOpacity', s.frameOpacity);
                 if (s.frameStyle) { setFrameStyle(s.frameStyle); }
                 if (s.frameColor) { poster.style.setProperty('--frame-color', s.frameColor); $('frameColor').value = s.frameColor; }
+                setSizeOverride('--divider-w', 'dividerW', 'dividerWVal', s.dividerW);
+                setSizeOverride('--fline-w', 'flineW', 'flineWVal', s.flineW);
+                setSizeOverride('--stars-size', 'starsSize', 'starsSizeVal', s.starsSize);
+                function setCol(cssVar, pickerId, v) { if (v) { poster.style.setProperty(cssVar, v); $(pickerId).value = v; } }
+                setCol('--divider-color', 'dividerColor', s.dividerColor);
+                setCol('--fline-color', 'flineColor', s.flineColor);
+                setCol('--stars-color', 'starsColor', s.starsColor);
                 setSizeOverride('--eyebrow-size', 'eyebrowSize', 'eyebrowSizeVal', s.eyebrowSize);
                 setRange('eyebrowOpacity', s.eyebrowOpacity);
                 setSizeOverride('--mono-size', 'monoSize', 'monoSizeVal', s.monoSize);
