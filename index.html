@@ -863,6 +863,31 @@
         .sheet-handle { width: 40px; height: 4px; border-radius: 4px; background: #d6dbe0; margin: 6px auto 14px; }
         .sheet h3 { color: #0B3D5C; font-size: 17px; margin-bottom: 6px; }
         .sheet > label { display: block; font-size: 12.5px; font-weight: 700; color: #3a4250; margin: 16px 0 8px; }
+        .sheet-input {
+            width: 100%; padding: 12px; border: 1px solid #d8dde3; border-radius: 8px;
+            font-family: 'Tajawal', sans-serif; font-size: 16px; background: #fff; color: #2a3340;
+        }
+        .sheet-input:focus { outline: none; border-color: #E07B2E; box-shadow: 0 0 0 3px rgba(224,123,46,.14); }
+
+        /* التعريف الأولي */
+        .onboard {
+            position: fixed; inset: 0; z-index: 500; background: #0B1622;
+            display: flex; flex-direction: column;
+            padding: calc(20px + env(safe-area-inset-top)) 24px calc(20px + env(safe-area-inset-bottom));
+            color: #fff;
+        }
+        .onboard[hidden] { display: none; }
+        .ob-skip { align-self: flex-start; background: none; border: 0; color: rgba(255,255,255,.6); font-family: 'Tajawal',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; padding: 6px; }
+        .ob-stage { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+        .ob-slide { display: none; text-align: center; max-width: 420px; width: 100%; }
+        .ob-slide.is-on { display: block; }
+        .ob-art { font-size: 72px; margin-bottom: 18px; }
+        .ob-slide h2 { font-size: 26px; font-weight: 800; margin-bottom: 12px; color: #fff; font-family: 'Tajawal',sans-serif; }
+        .ob-slide p { font-size: 16px; color: rgba(255,255,255,.7); line-height: 1.6; margin-bottom: 10px; }
+        .ob-label { display: block; text-align: right; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.85); margin: 16px 0 8px; }
+        .ob-dots { display: flex; gap: 8px; justify-content: center; margin: 18px 0; }
+        .ob-dots span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.25); }
+        .ob-dots span.is-on { background: #E07B2E; width: 22px; border-radius: 6px; }
 
         /* المقبض مخفيّ على سطح المكتب (الشيت للجوال فقط؛ تتجاوزه قاعدة الجوال أدناه) */
         .sheet-grip { display: none; }
@@ -1272,6 +1297,70 @@
         <button class="btn-primary" id="newStartBtn" style="width:100%;margin-top:18px;">ابدأ التصميم</button>
         <button class="btn-text" id="newCancelBtn" style="width:100%;">إلغاء</button>
       </div>
+    </div>
+
+    <!-- ===== شيت: التصدير والمشاركة ===== -->
+    <div id="expSheet" class="sheet-overlay" hidden>
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <h3>⬇️ تصدير ومشاركة</h3>
+        <p style="color:#7a8290;font-size:13px;margin:2px 0 14px;">الأبعاد: <span id="expDim">1080×1920</span></p>
+        <button class="btn-primary" id="expSave" style="width:100%;">⬇️ حفظ صورة PNG</button>
+        <button class="btn-primary" id="expShare" style="width:100%;background:#0B3D5C;margin-top:10px;">📤 مشاركة</button>
+        <button class="btn-text" id="expClose" style="width:100%;">إغلاق</button>
+      </div>
+    </div>
+
+    <!-- ===== شيت: الإعدادات ===== -->
+    <div id="setSheet" class="sheet-overlay" hidden>
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <h3>⚙️ الإعدادات — الهوية الافتراضية</h3>
+        <label>شريط الإيبرو الافتراضي</label>
+        <input type="text" id="setEyebrow" class="sheet-input" value="توثيق · جبلة">
+        <label>المونوغرام الافتراضي</label>
+        <input type="text" id="setMono" class="sheet-input" value="𝓚.𝓐.𝓐" maxlength="16">
+        <label>الثيم الافتراضي</label>
+        <div class="theme-swatches" id="setTheme">
+          <div class="swatch active" data-theme="theme-jableh"></div>
+          <div class="swatch" data-theme="theme-tiedye"></div>
+          <div class="swatch" data-theme="theme-syria"></div>
+          <div class="swatch" data-theme="theme-documentary"></div>
+          <div class="swatch" data-theme="theme-medpaper"></div>
+          <div class="swatch" data-theme="theme-syriashift"></div>
+        </div>
+        <button class="btn-primary" id="setSaveBtn" style="width:100%;margin-top:18px;">حفظ الإعدادات</button>
+        <button class="btn-text" id="setResetBtn" style="width:100%;color:#c0392b;">🗑️ حذف كل المشاريع والإعدادات</button>
+        <button class="btn-text" id="setCancelBtn" style="width:100%;">إغلاق</button>
+      </div>
+    </div>
+
+    <!-- ===== التعريف الأولي (Onboarding) ===== -->
+    <div id="onboard" class="onboard" hidden>
+      <button class="ob-skip" id="obSkip">تخطّي</button>
+      <div class="ob-stage">
+        <div class="ob-slide is-on" data-i="0">
+          <div class="ob-art">🎨</div>
+          <h2>بوستر بهويتك خلال دقيقة</h2>
+          <p>صمّم بوستراً عربياً احترافياً ثابت الهوية، وانشره فوراً.</p>
+        </div>
+        <div class="ob-slide" data-i="1">
+          <div class="ob-art">📐</div>
+          <h2>ذكيٌّ بالمقاسات</h2>
+          <p>اختر المقاس (ستوري/بوست/مربّع/عريض) — وكل شيء يتكيّف تلقائياً.</p>
+        </div>
+        <div class="ob-slide" data-i="2">
+          <div class="ob-art">🪪</div>
+          <h2>اضبط هويتك</h2>
+          <p>هذه تظهر على كل بوستر تصنعه:</p>
+          <label class="ob-label">شريط الإيبرو</label>
+          <input type="text" id="obEyebrow" class="sheet-input" value="توثيق · جبلة">
+          <label class="ob-label">المونوغرام (الختم)</label>
+          <input type="text" id="obMono" class="sheet-input" value="𝓚.𝓐.𝓐" maxlength="16">
+        </div>
+      </div>
+      <div class="ob-dots"><span class="is-on"></span><span></span><span></span></div>
+      <button class="btn-primary ob-next" id="obNext" style="width:100%;">التالي ⟵</button>
     </div>
 
     <!-- ===== التنقّل السفلي ===== -->
@@ -1821,6 +1910,7 @@
                 applyState(DEFAULT_STATE);
                 var sel = $('sizeSelect'); sel.value = fmt; sel.dispatchEvent(new Event('change')); setActiveSeg(fmt);
                 applyTheme(theme);
+                applySettingsToNew();   // الهوية الافتراضية من الإعدادات
                 $('projName').value = 'بوستر بدون عنوان';
                 showScreen('editor');
                 saveState();   // يُنشئ سجل المشروع
@@ -1842,11 +1932,16 @@
             // التنقّل
             $('navHome').addEventListener('click', function () { showScreen('home'); renderHome(); });
             $('backBtn').addEventListener('click', function () { saveState(); commitThumb(function () { renderHome(); showScreen('home'); }); });
-            $('exportTopBtn').addEventListener('click', downloadPoster);
+            $('exportTopBtn').addEventListener('click', openExport);
             $('projName').addEventListener('input', saveState);
 
             // شيت "جديد"
-            function openNew() { $('newSheet').hidden = false; }
+            function openNew() {
+                var th = (loadSettings().theme) || 'theme-jableh';
+                newPickTheme = th;
+                $('newTheme').querySelectorAll('.swatch').forEach(function (s) { s.classList.toggle('active', s.getAttribute('data-theme') === th); });
+                $('newSheet').hidden = false;
+            }
             function closeNew() { $('newSheet').hidden = true; }
             $('navNew').addEventListener('click', openNew);
             $('emptyNewBtn').addEventListener('click', openNew);
@@ -1866,6 +1961,90 @@
                 });
             });
             $('newStartBtn').addEventListener('click', function () { closeNew(); newProject(newPickFmt, newPickTheme); });
+
+            // ============ المرحلة 2: إعدادات + تصدير + تعريف ============
+            var SKEY = 'khaldoun-settings';
+            function loadSettings() { try { return JSON.parse(localStorage.getItem(SKEY)) || {}; } catch (e) { return {}; } }
+            function saveSettings(o) { try { localStorage.setItem(SKEY, JSON.stringify(o)); } catch (e) {} }
+            function applySettingsToNew() {
+                var st = loadSettings();
+                if (st.eyebrow != null) { $('eyebrowInput').value = st.eyebrow; $('eyebrow').textContent = st.eyebrow; }
+                if (st.mono != null) { $('monoInput').value = st.mono; $('monogram').textContent = st.mono; }
+            }
+
+            // — الإعدادات —
+            function openSet() {
+                var st = loadSettings();
+                $('setEyebrow').value = st.eyebrow != null ? st.eyebrow : 'توثيق · جبلة';
+                $('setMono').value = st.mono != null ? st.mono : '𝓚.𝓐.𝓐';
+                var th = st.theme || 'theme-jableh';
+                $('setTheme').querySelectorAll('.swatch').forEach(function (s) { s.classList.toggle('active', s.getAttribute('data-theme') === th); });
+                $('setSheet').hidden = false;
+            }
+            $('navSettings').disabled = false;
+            $('navSettings').addEventListener('click', openSet);
+            $('setCancelBtn').addEventListener('click', function () { $('setSheet').hidden = true; });
+            $('setSheet').addEventListener('click', function (e) { if (e.target === $('setSheet')) { $('setSheet').hidden = true; } });
+            $('setTheme').querySelectorAll('.swatch').forEach(function (s) {
+                s.addEventListener('click', function () {
+                    $('setTheme').querySelectorAll('.swatch').forEach(function (x) { x.classList.remove('active'); });
+                    s.classList.add('active');
+                });
+            });
+            $('setSaveBtn').addEventListener('click', function () {
+                var active = $('setTheme').querySelector('.swatch.active');
+                saveSettings({ eyebrow: $('setEyebrow').value, mono: $('setMono').value, theme: active ? active.getAttribute('data-theme') : 'theme-jableh' });
+                $('setSheet').hidden = true;
+            });
+            $('setResetBtn').addEventListener('click', function () {
+                if (confirm('حذف كل المشاريع والإعدادات نهائياً؟')) {
+                    try { localStorage.clear(); } catch (e) {}
+                    currentPid = null; $('setSheet').hidden = true; renderHome(); showScreen('home');
+                }
+            });
+
+            // — التصدير والمشاركة —
+            function exportTargetW() { return $('posterContainer').classList.contains('fmt-16-9') ? 1920 : 1080; }
+            function openExport() {
+                var fmt = $('sizeSelect').value;
+                var map = { '9-16': '1080×1920', '4-5': '1080×1350', '1-1': '1080×1080', '16-9': '1920×1080' };
+                $('expDim').textContent = map[fmt] || '1080px';
+                $('expSheet').hidden = false;
+            }
+            $('expClose').addEventListener('click', function () { $('expSheet').hidden = true; });
+            $('expSheet').addEventListener('click', function (e) { if (e.target === $('expSheet')) { $('expSheet').hidden = true; } });
+            $('expSave').addEventListener('click', function () { $('expSheet').hidden = true; downloadPoster(); });
+            $('expShare').addEventListener('click', function () { $('expSheet').hidden = true; sharePoster(); });
+            function sharePoster() {
+                var el = $('posterContainer'), scale = exportTargetW() / 360;
+                html2canvas(el, { useCORS: true, backgroundColor: null, scale: scale, windowWidth: 1200, windowHeight: 2200 }).then(function (c) {
+                    c.toBlob(function (blob) {
+                        if (!blob) { return; }
+                        var file = new File([blob], 'khaldoun-poster.png', { type: 'image/png' });
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            navigator.share({ files: [file], title: 'بوستر — استوديو خلدون' }).catch(function () {});
+                        } else {
+                            var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
+                        }
+                    }, 'image/png');
+                }).catch(function () {});
+            }
+
+            // — التعريف الأولي —
+            var obIdx = 0;
+            function obShow(i) {
+                obIdx = i;
+                document.querySelectorAll('.ob-slide').forEach(function (s) { s.classList.toggle('is-on', +s.getAttribute('data-i') === i); });
+                document.querySelectorAll('.ob-dots span').forEach(function (d, di) { d.classList.toggle('is-on', di === i); });
+                $('obNext').textContent = (i === 2) ? 'ابدأ ✓' : 'التالي ⟵';
+            }
+            function obFinish() {
+                saveSettings({ eyebrow: $('obEyebrow').value, mono: $('obMono').value, theme: (loadSettings().theme || 'theme-jableh') });
+                try { localStorage.setItem('khaldoun-onboarded', '1'); } catch (e) {}
+                $('onboard').hidden = true;
+            }
+            $('obNext').addEventListener('click', function () { if (obIdx < 2) { obShow(obIdx + 1); } else { obFinish(); } });
+            $('obSkip').addEventListener('click', function () { try { localStorage.setItem('khaldoun-onboarded', '1'); } catch (e) {} $('onboard').hidden = true; });
 
             // ============ Bottom Sheet للمحرّر (جوال) ============
             (function setupSheet() {
@@ -1907,6 +2086,8 @@
             // بدء التطبيق على الشاشة الرئيسية
             renderHome();
             showScreen('home');
+            // التعريف الأولي لأول مرة فقط
+            try { if (!localStorage.getItem('khaldoun-onboarded')) { obShow(0); $('onboard').hidden = false; } } catch (e) {}
             if (document.fonts && document.fonts.ready) {
                 document.fonts.ready.then(function () { if (document.body.classList.contains('in-editor')) { autoFitFooter(); } });
             }
