@@ -864,60 +864,60 @@
         .sheet h3 { color: #0B3D5C; font-size: 17px; margin-bottom: 6px; }
         .sheet > label { display: block; font-size: 12.5px; font-weight: 700; color: #3a4250; margin: 16px 0 8px; }
 
+        /* المقبض مخفيّ على سطح المكتب (الشيت للجوال فقط؛ تتجاوزه قاعدة الجوال أدناه) */
+        .sheet-grip { display: none; }
+
         /* ============================================================
            جوال (portrait) — آخر الستايل ليتجاوز كل قواعد الأساس
            ============================================================ */
         @media (max-width: 760px) {
             body { padding: 0; }
-            .studio {
-                flex-direction: column;
-                flex-wrap: nowrap;
-                gap: 0;
-                align-items: stretch;
-                max-width: 100%;
-            }
-            /* شريط معاينة مدمج ملتصق بالأعلى (محدود الارتفاع) */
+            .studio { flex-direction: column; flex-wrap: nowrap; gap: 0; align-items: stretch; max-width: 100%; }
+
+            /* منطقة القماش: البوستر في الأعلى خلف الشيت */
             .studio .poster-col {
-                position: sticky;
-                top: 0;
-                z-index: 50;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                background: #eceef1;
-                padding: 8px 0 10px;
-                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+                width: 100%; display: flex; justify-content: center;
+                padding: 14px 0 0; min-height: 52dvh;
             }
             .studio .poster-col .poster-container {
-                width: auto;
-                height: 34vh;
-                height: 34dvh;          /* ارتفاع ثابت → العرض يُشتقّ من النسبة */
-                max-width: 88vw;
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+                width: auto; height: 46vh; height: 46dvh; max-width: 92vw;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
             }
-            /* أدوات التحرير بعرض كامل ومريحة */
+
+            /* لوحة التحرير = Bottom Sheet قابل للسحب */
             .studio .editor-col {
-                width: 100%;
-                max-width: 100%;
-                min-width: 0;
-                padding: 12px;
+                position: fixed; left: 0; right: 0; bottom: 0;
+                height: 92dvh; max-width: 100%; min-width: 0;
+                background: #fff; border-radius: 18px 18px 0 0;
+                box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.28);
+                z-index: 100; display: flex; flex-direction: column; overflow: hidden;
+                transform: translateY(46dvh);              /* وضع نصفي افتراضي */
+                transition: transform .28s cubic-bezier(.4, 0, .2, 1);
+                padding: 0;
             }
-            .editor-panel { box-shadow: none; padding: 2px 0 10px; }
-            /* شريط التبويبات ثابت (غير ملتصق) على الجوال لتفادي تداخله مع شريط المعاينة */
-            .tab-bar { position: static; padding-top: 0; }
+            .studio .editor-col.dragging { transition: none; }
+            .sheet-grip {
+                display: flex; align-items: center; justify-content: center;
+                padding: 9px 0 7px; cursor: grab; touch-action: none; flex: 0 0 auto;
+                background: #fff; border-radius: 18px 18px 0 0;
+            }
+            .grip-bar { width: 44px; height: 5px; border-radius: 5px; background: #cbd2da; }
+            .editor-col .editor-panel {
+                flex: 1 1 auto; overflow-y: auto; box-shadow: none;
+                padding: 0 14px 14px; -webkit-overflow-scrolling: touch;
+            }
+            .editor-panel h3 { display: none; }   /* الاسم في شريط المحرّر */
+
+            .tab-bar { position: sticky; top: 0; background: #fff; padding: 4px 0 8px; z-index: 6; }
             .tab-btn { padding: 11px 4px; font-size: 13px; }
             .section { padding: 14px 13px 4px; }
-            /* 16px يمنع تكبير iOS التلقائي عند التركيز */
-            .form-group input,
-            .form-group textarea,
-            .form-group select,
+            .form-group input, .form-group textarea, .form-group select,
             .field-controls .font-sel { font-size: 16px; padding: 12px; }
             .field-controls input[type="range"] { flex: 0 1 90px; }
             .seg { padding: 12px 4px; font-size: 14px; }
             .form-group label.chk { padding: 5px 0; }
             .form-group label.chk input[type="checkbox"] { width: 22px; height: 22px; }
-            /* ضمان ظهور الحقل أسفل الشريط الملتصق عند التركيز */
-            .form-group { scroll-margin-top: 38dvh; }
+            .btn-row { position: sticky; bottom: 0; }
         }
     </style>
 </head>
@@ -975,6 +975,7 @@
       </div>
 
       <div class="editor-col">
+        <div class="sheet-grip" id="sheetGrip"><div class="grip-bar"></div></div>
         <div class="editor-panel" id="editorPanel">
         <h3>📝 عدّل البوستر</h3>
 
@@ -1865,6 +1866,43 @@
                 });
             });
             $('newStartBtn').addEventListener('click', function () { closeNew(); newProject(newPickFmt, newPickTheme); });
+
+            // ============ Bottom Sheet للمحرّر (جوال) ============
+            (function setupSheet() {
+                var col = document.querySelector('.editor-col');
+                var grip = $('sheetGrip');
+                if (!col || !grip) { return; }
+                function isMobile() { return window.matchMedia('(max-width: 760px)').matches; }
+                function H() { return window.innerHeight; }
+                function snaps() { return { full: 0.06 * H(), half: 0.46 * H(), peek: 0.80 * H() }; }
+                var cur = 'half';
+                function applySnap(name) { cur = name; col.style.transform = 'translateY(' + snaps()[name] + 'px)'; }
+                function curT() { var m = /translateY\(([-\d.]+)px\)/.exec(col.style.transform); return m ? parseFloat(m[1]) : snaps().half; }
+                var startY = 0, startT = 0, dragging = false;
+                grip.addEventListener('touchstart', function (e) {
+                    if (!isMobile()) { return; }
+                    dragging = true; col.classList.add('dragging');
+                    startY = e.touches[0].clientY; startT = curT();
+                }, { passive: true });
+                grip.addEventListener('touchmove', function (e) {
+                    if (!dragging) { return; }
+                    var s = snaps();
+                    var t = Math.max(s.full, Math.min(s.peek, startT + (e.touches[0].clientY - startY)));
+                    col.style.transform = 'translateY(' + t + 'px)';
+                }, { passive: true });
+                grip.addEventListener('touchend', function () {
+                    if (!dragging) { return; }
+                    dragging = false; col.classList.remove('dragging');
+                    if (Math.abs(curT() - startT) < 8) {              // نقرة = تبديل
+                        applySnap(cur === 'peek' ? 'half' : cur === 'half' ? 'full' : 'peek');
+                    } else {                                           // سحب = أقرب وضع
+                        var s = snaps(), t = curT();
+                        var nearest = Object.keys(s).reduce(function (a, b) { return Math.abs(s[b] - t) < Math.abs(s[a] - t) ? b : a; });
+                        applySnap(nearest);
+                    }
+                });
+                window.addEventListener('resize', function () { if (isMobile() && col.style.transform) { applySnap(cur); } });
+            })();
 
             // بدء التطبيق على الشاشة الرئيسية
             renderHome();
