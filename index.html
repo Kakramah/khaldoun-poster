@@ -246,6 +246,72 @@
         .poster-frame::before { top: -2px; right: -2px; border-left: 0; border-bottom: 0; }
         .poster-frame::after  { bottom: -2px; left: -2px; border-right: 0; border-top: 0; }
 
+        /* ===== أنماط الإطار ===== */
+        /* نيون متوهّج (متحرّك) */
+        .poster-container.fr-neon .poster-frame {
+            border: 2px solid var(--accent); border-radius: 8px;
+            box-shadow: 0 0 10px var(--accent), inset 0 0 10px var(--accent-soft);
+            animation: framePulse 2.4s ease-in-out infinite;
+        }
+        .poster-container.fr-neon .poster-frame::before,
+        .poster-container.fr-neon .poster-frame::after { display: none; }
+        @keyframes framePulse {
+            0%, 100% { box-shadow: 0 0 8px var(--accent), inset 0 0 8px var(--accent-soft); }
+            50% { box-shadow: 0 0 22px var(--accent), inset 0 0 16px var(--accent); }
+        }
+        @media (prefers-reduced-motion: reduce) { .poster-container.fr-neon .poster-frame { animation: none; } }
+
+        /* أقواس الزاوية فقط (بلا خط) */
+        .poster-container.fr-corners .poster-frame { border: 0; }
+        .poster-container.fr-corners .poster-frame::before,
+        .poster-container.fr-corners .poster-frame::after { width: 26px; height: 26px; }
+
+        /* مزدوج */
+        .poster-container.fr-double .poster-frame { border: 3px double var(--accent); border-radius: 2px; }
+        .poster-container.fr-double .poster-frame::before,
+        .poster-container.fr-double .poster-frame::after { display: none; }
+
+        /* متقطّع */
+        .poster-container.fr-dashed .poster-frame { border: 2px dashed var(--accent-soft); border-radius: 4px; }
+        .poster-container.fr-dashed .poster-frame::before,
+        .poster-container.fr-dashed .poster-frame::after { display: none; }
+
+        /* خط أحمر جانبي (جهاز توثيقي) */
+        .poster-container.fr-redline .poster-frame { border: 0; }
+        .poster-container.fr-redline .poster-frame::before {
+            display: block; width: 6px; height: 100%; top: 0; right: -3px; left: auto; bottom: auto;
+            border: 0; background: #7a1a0a; border-radius: 4px;
+        }
+        .poster-container.fr-redline .poster-frame::after { display: none; }
+
+        /* شريط فيلم على الجانبين */
+        .poster-container.fr-tape .poster-frame { border: 0; }
+        .poster-container.fr-tape .poster-frame::before,
+        .poster-container.fr-tape .poster-frame::after {
+            display: block; width: 14px; height: 100%; top: 0; border: 0; border-radius: 2px;
+            background:
+                repeating-linear-gradient(180deg, rgba(255,255,255,.75) 0 5px, transparent 5px 12px),
+                rgba(0,0,0,.78);
+            background-clip: content-box, padding-box; padding: 0 3px;
+        }
+        .poster-container.fr-tape .poster-frame::before { right: -7px; left: auto; }
+        .poster-container.fr-tape .poster-frame::after { left: -7px; right: auto; bottom: auto; }
+
+        /* حبل المشنقة (إبداعي) */
+        .poster-container.fr-noose .poster-frame { border: 0; }
+        .poster-container.fr-noose .poster-frame::before {   /* الحبل */
+            display: block; top: 0; left: 50%; right: auto; bottom: auto;
+            width: 3px; height: 34%; transform: translateX(-50%);
+            border: 0; background: linear-gradient(#b08d57, #6e5226);
+            box-shadow: 0 0 1px rgba(0,0,0,.5);
+        }
+        .poster-container.fr-noose .poster-frame::after {    /* العقدة الحلقية */
+            display: block; top: 32%; left: 50%; right: auto; bottom: auto;
+            width: 40px; height: 56px; transform: translateX(-50%);
+            border: 3px solid #8a6d3b; border-radius: 50%;
+            background: transparent; box-shadow: 0 0 1px rgba(0,0,0,.4);
+        }
+
         /* مونوغرام / ختم */
         .monogram {
             position: absolute;
@@ -481,6 +547,17 @@
         }
         .el-chip:hover { border-color: #E07B2E; }
         .el-chip.active { background: #E07B2E; color: #fff; border-color: #E07B2E; }
+
+        /* صفّ أنماط الإطار */
+        .fr-row { display: flex; flex-wrap: wrap; gap: 6px; }
+        .fr-chip {
+            padding: 8px 11px; border: 1px solid #d8dde3; border-radius: 20px;
+            background: #fff; color: #5a6472; font-weight: 700; font-size: 12px;
+            font-family: 'Tajawal', sans-serif; cursor: pointer; white-space: nowrap;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+        .fr-chip:hover { border-color: #E07B2E; }
+        .fr-chip.active { background: #0B3D5C; color: #fff; border-color: #0B3D5C; }
         /* يظهر تحكّم العنصر المختار فقط */
         .id-block[data-el] { display: none; }
         .id-block[data-el].el-visible { display: block; }
@@ -1204,6 +1281,19 @@
                 <div class="id-block-title">▭ الإطار وأقواس الزاوية</div>
                 <div class="form-group"><label class="chk"><input type="checkbox" id="tglFrame" checked> إظهار العنصر</label></div>
                 <div class="form-group">
+                    <label>نمط الإطار</label>
+                    <div class="fr-row" id="frameStyle">
+                        <button type="button" class="fr-chip active" data-fr="classic">كلاسيكي</button>
+                        <button type="button" class="fr-chip" data-fr="neon">نيون ✦</button>
+                        <button type="button" class="fr-chip" data-fr="corners">أقواس</button>
+                        <button type="button" class="fr-chip" data-fr="double">مزدوج</button>
+                        <button type="button" class="fr-chip" data-fr="dashed">متقطّع</button>
+                        <button type="button" class="fr-chip" data-fr="redline">خط أحمر</button>
+                        <button type="button" class="fr-chip" data-fr="tape">شريط فيلم</button>
+                        <button type="button" class="fr-chip" data-fr="noose">حبل المشنقة</button>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="slider-label"><span>الحجم (المسافة عن الحافة)</span><span class="size-badge" id="frameInsetVal">13px</span></label>
                     <input type="range" id="frameInset" min="2" max="46" step="1" value="13">
                 </div>
@@ -1677,6 +1767,17 @@
                 $('monogram').textContent = this.value;
             });
 
+            // أنماط الإطار
+            var FR_CLASSES = ['fr-neon', 'fr-corners', 'fr-double', 'fr-dashed', 'fr-redline', 'fr-tape', 'fr-noose'];
+            function setFrameStyle(fr) {
+                FR_CLASSES.forEach(function (c) { poster.classList.remove(c); });
+                if (fr && fr !== 'classic') { poster.classList.add('fr-' + fr); }
+                document.querySelectorAll('.fr-chip').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-fr') === fr); });
+            }
+            document.querySelectorAll('.fr-chip').forEach(function (b) {
+                b.addEventListener('click', function () { setFrameStyle(b.getAttribute('data-fr')); saveState(); });
+            });
+
             // حجم/شفافية/موضع لكل عنصر هوية
             function bindPx(sliderId, badgeId, cssVar, fit) {
                 $(sliderId).addEventListener('input', function () {
@@ -1758,6 +1859,7 @@
                     mono: $('tglMono').checked,
                     frameInset: poster.style.getPropertyValue('--frame-inset'),
                     frameOpacity: $('frameOpacity').value,
+                    frameStyle: (function () { var c = poster.className.match(/\bfr-(\w+)/); return c ? c[1] : 'classic'; })(),
                     eyebrowSize: poster.style.getPropertyValue('--eyebrow-size'),
                     eyebrowOpacity: $('eyebrowOpacity').value,
                     ebPos: poster.style.getPropertyValue('--eyebrow-justify') || 'flex-start',
@@ -1843,6 +1945,7 @@
                 setChk('tglMono', s.mono);
                 setSizeOverride('--frame-inset', 'frameInset', 'frameInsetVal', s.frameInset);
                 setRange('frameOpacity', s.frameOpacity);
+                if (s.frameStyle) { setFrameStyle(s.frameStyle); }
                 setSizeOverride('--eyebrow-size', 'eyebrowSize', 'eyebrowSizeVal', s.eyebrowSize);
                 setRange('eyebrowOpacity', s.eyebrowOpacity);
                 setSizeOverride('--mono-size', 'monoSize', 'monoSizeVal', s.monoSize);
