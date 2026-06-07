@@ -2,8 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خلدون - بوستر ثوري</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>استوديو خلدون — بوسترات</title>
+    <meta name="theme-color" content="#0B1622">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="استوديو خلدون">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icon-180.png">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;700;800&family=Cairo:wght@400;700;900&family=Reem+Kufi:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=El+Messiri:wght@400;700&family=Markazi+Text:wght@400;700&family=Lalezar&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -889,6 +895,20 @@
         .ob-dots span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.25); }
         .ob-dots span.is-on { background: #E07B2E; width: 22px; border-radius: 6px; }
 
+        /* توست النجاح */
+        .toast {
+            position: fixed; left: 50%; bottom: calc(86px + env(safe-area-inset-bottom));
+            transform: translateX(-50%) translateY(16px);
+            background: #0B3D5C; color: #fff; padding: 11px 20px; border-radius: 24px;
+            font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 14px;
+            z-index: 600; opacity: 0; pointer-events: none;
+            transition: opacity .2s ease, transform .2s ease; box-shadow: 0 6px 22px rgba(0,0,0,.35);
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        /* أيقونات SVG في الأزرار */
+        .nav-item svg, .icon-btn svg { width: 22px; height: 22px; }
+        .nav-fab svg { width: 26px; height: 26px; }
+
         /* المقبض مخفيّ على سطح المكتب (الشيت للجوال فقط؛ تتجاوزه قاعدة الجوال أدناه) */
         .sheet-grip { display: none; }
 
@@ -966,9 +986,13 @@
     <!-- ===== شاشة المحرّر ===== -->
     <div id="screen-editor" class="screen">
       <header class="editor-bar">
-        <button class="icon-btn" id="backBtn" aria-label="رجوع للمشاريع">⟶</button>
+        <button class="icon-btn" id="backBtn" aria-label="رجوع للمشاريع">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
         <input type="text" id="projName" class="proj-name" value="بوستر بدون عنوان" aria-label="اسم المشروع">
-        <button class="icon-btn primary" id="exportTopBtn" aria-label="تصدير">⬇️</button>
+        <button class="icon-btn primary" id="exportTopBtn" aria-label="تصدير">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+        </button>
       </header>
     <div class="studio">
       <div class="poster-col">
@@ -1365,10 +1389,20 @@
 
     <!-- ===== التنقّل السفلي ===== -->
     <nav class="bottom-nav">
-      <button class="nav-item is-active" id="navHome"><span class="ico">🏠</span><span>المشاريع</span></button>
-      <button class="nav-item nav-fab" id="navNew" aria-label="بوستر جديد">➕</button>
-      <button class="nav-item" id="navSettings" disabled><span class="ico">⚙️</span><span>إعدادات</span></button>
+      <button class="nav-item is-active" id="navHome">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+        <span>المشاريع</span>
+      </button>
+      <button class="nav-item nav-fab" id="navNew" aria-label="بوستر جديد">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="nav-item" id="navSettings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>إعدادات</span>
+      </button>
     </nav>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <script>
         (function () {
@@ -1429,6 +1463,7 @@
                     link.click();
                     btn.textContent = original;
                     btn.disabled = false;
+                    haptic(); showToast('تم حفظ الصورة ✓');
                 }).catch(function (err) {
                     console.error(err);
                     btn.textContent = '⚠️ تعذّر الحفظ — جرّب صورة بدون قيود CORS';
@@ -1866,6 +1901,15 @@
             var DEFAULT_STATE = collectState();   // قماش فارغ ذكي (يُلتقط قبل أي تعديل)
             var currentPid = null;
 
+            // توست + اهتزاز
+            var _toastT;
+            function haptic(ms) { try { if (navigator.vibrate) { navigator.vibrate(ms || 12); } } catch (e) {} }
+            function showToast(msg) {
+                var t = $('toast'); if (!t) { return; }
+                t.textContent = msg; t.classList.add('show');
+                clearTimeout(_toastT); _toastT = setTimeout(function () { t.classList.remove('show'); }, 2200);
+            }
+
             function loadProjects() { try { return JSON.parse(localStorage.getItem(PKEY)) || []; } catch (e) { return []; } }
             function saveProjects(arr) { try { localStorage.setItem(PKEY, JSON.stringify(arr)); } catch (e) {} }
 
@@ -1931,7 +1975,7 @@
 
             // التنقّل
             $('navHome').addEventListener('click', function () { showScreen('home'); renderHome(); });
-            $('backBtn').addEventListener('click', function () { saveState(); commitThumb(function () { renderHome(); showScreen('home'); }); });
+            $('backBtn').addEventListener('click', function () { haptic(); saveState(); commitThumb(function () { renderHome(); showScreen('home'); showToast('تم حفظ المشروع ✓'); }); });
             $('exportTopBtn').addEventListener('click', openExport);
             $('projName').addEventListener('input', saveState);
 
@@ -1994,7 +2038,7 @@
             $('setSaveBtn').addEventListener('click', function () {
                 var active = $('setTheme').querySelector('.swatch.active');
                 saveSettings({ eyebrow: $('setEyebrow').value, mono: $('setMono').value, theme: active ? active.getAttribute('data-theme') : 'theme-jableh' });
-                $('setSheet').hidden = true;
+                $('setSheet').hidden = true; haptic(); showToast('تم حفظ الإعدادات ✓');
             });
             $('setResetBtn').addEventListener('click', function () {
                 if (confirm('حذف كل المشاريع والإعدادات نهائياً؟')) {
@@ -2090,6 +2134,11 @@
             try { if (!localStorage.getItem('khaldoun-onboarded')) { obShow(0); $('onboard').hidden = false; } } catch (e) {}
             if (document.fonts && document.fonts.ready) {
                 document.fonts.ready.then(function () { if (document.body.classList.contains('in-editor')) { autoFitFooter(); } });
+            }
+
+            // تسجيل Service Worker (PWA — يعمل على https فقط)
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
             }
         })();
     </script>
