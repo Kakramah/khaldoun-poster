@@ -952,7 +952,15 @@
 
         .sheet-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; justify-content: center; }
         .sheet-overlay[hidden] { display: none; }
-        .sheet { background: #fff; width: 100%; max-width: 480px; border-radius: 18px 18px 0 0; padding: 8px 18px calc(20px + env(safe-area-inset-bottom)); animation: sheet-up .25s ease-out; }
+        .sheet { background: #fff; width: 100%; max-width: 480px; max-height: 88dvh; overflow-y: auto; border-radius: 18px 18px 0 0; padding: 8px 18px calc(20px + env(safe-area-inset-bottom)); animation: sheet-up .25s ease-out; }
+        .tpl-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+        .tpl-card { display: flex; align-items: center; gap: 11px; padding: 11px 12px; border: 1px solid #e3e7ec; border-radius: 11px; background: #fff; cursor: pointer; }
+        .tpl-card:active { background: #f3f5f7; }
+        .tpl-card .tpl-ic { width: 42px; height: 42px; border-radius: 9px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; font-size: 19px; color: #fff; font-weight: 800; }
+        .tpl-card .tpl-tx { flex: 1; min-width: 0; }
+        .tpl-card .tpl-nm { font-weight: 800; font-size: 14px; color: #2a3340; }
+        .tpl-card .tpl-sub { font-size: 11px; color: #8a93a0; margin-top: 1px; }
+        .tpl-divider { text-align: center; color: #9aa3af; font-size: 12px; margin: 12px 0; }
         @keyframes sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .sheet-handle { width: 40px; height: 4px; border-radius: 4px; background: #d6dbe0; margin: 6px auto 14px; }
         .sheet h3 { color: #0B3D5C; font-size: 17px; margin-bottom: 6px; }
@@ -1470,6 +1478,9 @@
       <div class="sheet">
         <div class="sheet-handle"></div>
         <h3>بوستر جديد</h3>
+        <label>قوالب جاهزة (من منظومتك)</label>
+        <div class="tpl-list" id="tplList"></div>
+        <div class="tpl-divider">— أو ابدأ فارغاً —</div>
         <label>المقاس</label>
         <div class="seg-row" id="newFmt">
           <button type="button" class="seg active" data-fmt="9-16">9:16<small>ستوري</small></button>
@@ -2212,6 +2223,80 @@
                 saveState();   // يُنشئ سجل المشروع
             }
 
+            // ===== قوالب منظومة خلدون (آخر القوالب الاسمية المحفوظة) =====
+            var TEMPLATES = [
+                {
+                    id: 'arrest', name: 'تم القبض', sub: 'بوستر اعتقال سينمائي · 9:16', icon: '⛓', accent: '#F5C542',
+                    theme: 'theme-documentary', fmt: '9-16', titleFont: "'Lalezar', cursive",
+                    title: 'تم القبض', accentText: '', eyebrow: '', footer: '', frameOff: true,
+                    prompt: 'Create a vertical 9:16 Arabic cinematic arrest poster.\n\nUse the uploaded man\'s image as the primary identity reference. Preserve the same man exactly: same face, shaved head, body size, expression, skin tone, posture, and the same black-and-beige vertical striped shirt. Do not change the clothing, do not slim him, do not beautify him, do not replace the face.\n\nPoster concept:\nA dramatic custody / jail poster. The man is centered and dominant, standing behind thick black iron prison bars in the foreground, realistic, scratched, heavy. Keep the man\'s face clearly visible between the bars.\n\nBackground: dark gritty mugshot height-chart wall, faded measurement numbers, dirty concrete texture, charcoal-black atmosphere, harsh forensic spotlight behind the head, heavy vignette, realistic dust and scratches.\n\nHeadline: huge Arabic text at the top: "تم القبض" — bold massive Arabic 3D block letters, bright warning yellow, thick black extrusion, gritty scratched surface, angled slightly in perspective. Prison bars pass through the headline (some letters partially occluded), text stays readable.\n\nComposition: the man is the main focus; the title dominates the upper third. No English text, no police logos, no fake official seals, no extra accusations.\n\nSignature: exact "@𝓚𝓱𝓪𝓵𝓭𝓸𝓾𝓷𝓐𝓴𝓻𝓪𝓶𝓪𝓱" bottom-right, very small, 12–18% opacity, integrated into the dark texture/shadow. No AI plastic skin, no debug overlays.'
+                },
+                {
+                    id: 'wanted', name: 'مطلوب', sub: 'غلاف صحفي أبيض/أسود · 9:16', icon: '▮', accent: '#C0392B',
+                    theme: 'theme-documentary', fmt: '9-16', titleFont: "'Cairo', sans-serif",
+                    title: 'هذا هو المطلوب', accentText: 'مطلوب', eyebrow: 'ملف مفتوح', footer: '', frameOff: false,
+                    prompt: 'Create a vertical 9:16 Arabic editorial cinematic poster in a newspaper-cover style.\n\nThe poster should look like a dramatic black-and-white press cover or investigative editorial page: high contrast, gritty paper texture, monochrome portrait, serious typography, and a bold red censorship strip across the eyes.\n\nMain subject: use the provided person as the identity reference. Preserve face, hairstyle, beard, skin tone, expression, and overall identity. Do not beautify or replace the face.\n\nComposition: center the person chest-up or waist-up; the portrait dominates the page. Background: worn grey paper texture, subtle grain, faint article columns, thin dividing lines, a large headline area at the top.\n\nTop headline: huge Arabic in bold condensed editorial type: "ماذا لو كان طليقًا؟" or "هذا هو المطلوب" — white on a dark rectangular banner.\nEye strip: a bold horizontal red strip across the eyes only, with strong white Arabic text inside: "مطلوب".\n\nColor: mostly monochrome black/white/grey; the only strong accent is the red strip. Mood: investigative, ominous, editorial, high-contrast, print-poster quality. No English slogans, no fake police logos.\n\nSignature: exact "@𝓚𝓱𝓪𝓵𝓭𝓸𝓾𝓷𝓐𝓴𝓻𝓪𝓶𝓪𝓱" bottom-right, very small, 12–18% opacity, integrated into paper grain or shadow.'
+                },
+                {
+                    id: 'memory', name: 'الذاكرة', sub: 'كشف مزدوج عاطفي · 9:16', icon: '◐', accent: '#C0392B',
+                    theme: 'theme-documentary', fmt: '9-16', titleFont: "'Amiri', serif",
+                    title: 'حتى الذاكرة تُقاوم', accentText: '', eyebrow: 'الذاكرة', footer: 'شهادة لا تُمحى.', frameOff: true,
+                    prompt: 'Create a vertical 9:16 emotional Arabic poster in a split-reveal cinematic style.\n\nA poetic, human-centered poster with a dual-layer portrait. The full background uses the same subject in black-and-white, softly blurred, faded and emotionally distant. Over it, place one tall narrow vertical rectangular panel that reveals a sharp, detailed, color version of the same subject. The contrast between the blurred monochrome background and the sharp color reveal panel is the core concept.\n\nMain subject: use the provided person as identity/composition reference. Preserve face, age, skin tone, expression, clothing, emotional realism. Do not beautify or stylize into fantasy.\n\nText: top-left a short Arabic quote in bold dramatic typography (2–4 lines), mostly white with one important word in red. Bottom: a short reflective Arabic caption, small and clean. A thin white dashed curved arrow points toward the reveal panel.\n\nColor: background monochrome, soft blur; reveal panel muted realistic color, sharp, subtle edge glow; red accent only on selected words. Mood: reflective, documentary-poetic, restrained, elegant.\n\nSignature: exact "@𝓚𝓱𝓪𝓵𝓭𝓸𝓾𝓷𝓐𝓴𝓻𝓪𝓶𝓪𝓱" bottom-right, very small, 12–18% opacity, integrated into shadow or texture.'
+                },
+                {
+                    id: 'page', name: 'صفحة', sub: 'إنفوغرافيك توثيقي · 9:16', icon: '▤', accent: '#7a1a0a',
+                    theme: 'theme-medpaper', fmt: '9-16', titleFont: "'Cairo', sans-serif",
+                    title: 'سجن صيدنايا', accentText: 'ملف توثيقي', eyebrow: 'توثيق', footer: 'صفحة توثيقية مبنية على تقارير موثّقة.', frameOff: false,
+                    prompt: 'Create a vertical 9:16 Arabic editorial documentary infographic poster.\n\nA premium Arabic editorial / investigative feature layout. Textured off-white paper background, restrained sepia-grey documentary palette, dark charcoal typography, muted deep-red accents for emphasis. Feels like a serious Arabic documentary feature, not a commercial poster.\n\nTopic: "[اكتب الموضوع]" (e.g. سجن صيدنايا / ملف التهجير القسري). All factual text must be documentary summary language based only on verified or widely documented information — avoid invented numbers unless provided.\n\nLayout: (1) top headline + strong subtitle + 3–5 line intro paragraph; (2) left vertical timeline with 4–6 milestones (year + icon + short text); (3) central dominant documentary scene (prison corridor / detention door / families holding photos); (4) right supporting panel (1–2 smaller documentary visuals); (5) 3–4 editorial info boxes ("محطات أساسية"، "ماذا وثقت التقارير؟"، "الأثر على العائلات"); (6) bottom sources box "مصادر اعتمدت عليها الصفحة" listing 3–5 Arabic sources (text only, no fake logos).\n\nTypography: Arabic only, bold headline hierarchy, readable body. Color: warm off-white, charcoal, muted grayscale, deep documentary red for emphasis only. Mood: investigative, archival, sober.\n\nSignature: exact "@𝓚𝓱𝓪𝓵𝓭𝓸𝓾𝓷𝓐𝓴𝓻𝓪𝓶𝓪𝓱" bottom-right, very small, 12–18% opacity, integrated into paper texture.'
+                },
+                {
+                    id: 'cover', name: 'صفحة2', sub: 'غلاف أدبي تحريري · 9:16', icon: '✒', accent: '#7a1a0a',
+                    theme: 'theme-medpaper', fmt: '9-16', titleFont: "'Amiri', serif",
+                    title: 'كاتب قصة السجن', accentText: 'هل تخرج الحكاية من الزنزانة؟', eyebrow: 'أدب وثقافة', footer: 'الكتابة أبطأ من الألم، لكنها أبقى.', frameOff: false,
+                    prompt: 'Create a vertical 9:16 Arabic literary-editorial cover poster.\n\nA refined Arabic arts-and-culture magazine cover aesthetic — minimal, elegant, deeply emotional. Clean off-white editorial background with subtle paper texture, restrained black typography, and a central symbolic composition emerging from a fountain pen nib.\n\nTheme: "[اكتب الموضوع]" (e.g. أدب السجون / شهادة من الزنزانة). Main concept: the pen becomes the source of memory and testimony. A large fountain pen nib at bottom center; from it rises a vertically stretched ink-cloud form containing a layered documentary-literary collage: (1) a dim cell interior with a high window and narrow light beam; (2) a rough hand writing on aged paper; (3) a small lonely prisoner silhouette. Optional: tally marks, stacked pages, ink particles, softened prison bars.\n\nText: top Arabic arts masthead ("أدب وثقافة"); large Arabic title on the left; a reflective literary subheadline; a refined right-side essay-like Arabic column on testimony, memory, writing under captivity. A small ink-blot near lower-left holds a short white Arabic quote.\n\nVisual: central collage monochrome or sepia, elegant and cinematic; spacious off-white page with strong negative space; premium literary feel. Arabic only. Color: off-white paper, black ink, warm grey/sepia. Mood: literary, reflective, haunted, serious.\n\nSignature: exact "@𝓚𝓱𝓪𝓵𝓭𝓸𝓾𝓷𝓐𝓴𝓻𝓪𝓶𝓪𝓱" bottom-right, very small, 12–18% opacity, integrated into the paper texture.'
+                }
+            ];
+
+            function renderTemplates() {
+                var list = $('tplList'); if (!list) { return; }
+                list.innerHTML = '';
+                TEMPLATES.forEach(function (t) {
+                    var card = document.createElement('div'); card.className = 'tpl-card';
+                    var ic = document.createElement('div'); ic.className = 'tpl-ic'; ic.style.background = t.accent || '#0B3D5C'; ic.textContent = t.icon || '★';
+                    var tx = document.createElement('div'); tx.className = 'tpl-tx';
+                    var nm = document.createElement('div'); nm.className = 'tpl-nm'; nm.textContent = t.name;
+                    var sub = document.createElement('div'); sub.className = 'tpl-sub'; sub.textContent = t.sub || '';
+                    tx.appendChild(nm); tx.appendChild(sub);
+                    card.appendChild(ic); card.appendChild(tx);
+                    card.addEventListener('click', function () { closeNew(); applyTemplate(t); });
+                    list.appendChild(card);
+                });
+            }
+
+            function applyTemplate(t) {
+                currentPid = 'p' + Date.now();
+                applyState(DEFAULT_STATE);
+                var sel = $('sizeSelect'); sel.value = t.fmt || '9-16'; sel.dispatchEvent(new Event('change')); setActiveSeg(t.fmt || '9-16');
+                applyTheme(t.theme || 'theme-jableh');
+                if (t.accent) { setAccent(t.accent); }
+                if (t.title != null) { $('titleMainInput').value = t.title; }
+                if (t.accentText != null) { $('titleAccentInput').value = t.accentText; }
+                if (t.footer != null) { $('footerTextInput').value = t.footer; }
+                updatePoster();
+                if (t.titleFont) { $('titleMainFont').value = t.titleFont; $('titleMainFont').dispatchEvent(new Event('change')); }
+                if (t.eyebrow != null) { $('eyebrowInput').value = t.eyebrow; $('eyebrow').textContent = t.eyebrow; }
+                if (t.frameOff) { $('tglFrame').checked = false; $('tglFrame').dispatchEvent(new Event('change')); }
+                $('projName').value = t.name;
+                showScreen('editor');
+                saveState();
+                // انسخ برومبت التوليد ليولّد الصورة الأساسية خارجياً ثم يرفعها
+                if (t.prompt && navigator.clipboard) {
+                    navigator.clipboard.writeText(t.prompt)
+                        .then(function () { haptic(); showToast('نُسخ برومبت التوليد — ولّد الصورة ثم ارفعها'); })
+                        .catch(function () { showToast('القالب جاهز — افتح «صورة» لرفع الصورة'); });
+                } else { showToast('القالب جاهز'); }
+            }
+
             function commitThumb(cb) {
                 if (!currentPid) { if (cb) { cb(); } return; }
                 html2canvas($('posterContainer'), { useCORS: true, backgroundColor: null, scale: 0.5, windowWidth: 1200, windowHeight: 2200 })
@@ -2380,6 +2465,7 @@
             })();
 
             // بدء التطبيق على الشاشة الرئيسية
+            renderTemplates();
             renderHome();
             showScreen('home');
             // التعريف الأولي لأول مرة فقط
